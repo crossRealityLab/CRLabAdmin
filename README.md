@@ -1,68 +1,110 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Cross Reality Lab Admin
 
-## Available Scripts
+## Data Spec .
 
-In the project directory, you can run:
+``` typescript
+type Project = {
+  pid: string;
+  showTitle: string;
+  title: string;
+  year: number;
+  authors: string[];
+  cover: stirng;  // url
+  imgs: {
+    caption: string;
+    url: stirng;
+  }[],
+  videos: {
+    caption: string;
+    url: string;
+  }[]
+  abstract: string;
+  descriptions: string[];  // 用 array 來分段
+  tags: string[];
+  timestamp: number;
+  // If is accepted by conference
+  publication?: string;  // e.g. CHI UIST 
+  acceptedYear?: number;
+  pdf?: string; // url
+  doi?: string; // url
+};
 
-### `npm start`
+type Member = {
+  uid: string;
+  fullName: string;
+  avatar: string; // url
+  title: string;  // e.g. Professor, PhD, master 
+  focusOn: string[];  // e.g. haptic, 3d-model, UIUX
+  email: string;
+  website?: string; // url
+  about: string;
+  publications: {
+    title: string;
+    conference: string;
+    year: number;
+    link: string;
+  }[];
+  awards: {
+    title: string;
+    year: number;
+  }[];
+  timestamp: number;
+};
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+type News = {
+  nid: string;
+  title: string;
+  description: string;
+  date: string; // e.g. YYYY/MM/DD
+  timestamp: number;
+};
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+type LabIntroduction = {
+  title: string,
+  subTitle: string,
+  vision: string[],
+  timestamp: number;
+}
+type Course = {
+  basicInformation: {
+    CourseNumber: string,
+    Credits: number,
+    TermYear: string,
+    Location: string,
+    TA: string[],
+    Instructor: string
+    OfficeLocation: string
+    OfficeHours: string
+    Email: string
+  }
+  description: string,
+  video: string,
+  image: string,
+  timestamp: number;
+}
 
-### `npm test`
+type Contact = {
+  description: string,
+  banner: string,
+  contantInformation: {
+    name: string,
+    phone: string,
+    officeHour: string,
+    office: string,
+    lab: string,
+  }
+  timestamp: number;
+}
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## TODO
+* [] Modulelize 各個不同類型 Input
+  - Keep in components file
+* [] Validation
+* [] 調整各個 Input Field 寬度高度
+* [] 串接資料
+  - 在 root (Edit.js/Create.js) 撰寫邏輯
+    - check 是否帶有 id 
+      - 有: Edit  -> 會有 initial data state .
+      - 無: Create 
