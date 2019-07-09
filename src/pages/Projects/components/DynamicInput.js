@@ -1,39 +1,37 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Form, Input, Button, Icon } from "antd";
 
 export default ({
   title,
+  dataKey,
   getFieldDecorator,
   getFieldValue,
   setFieldsValue,
   validationRules = [],
   isTextArea = false
 }) => {
-  const currentId = useRef(1);
-  const titleKey = title.split(" ").join("");
-
   const remove = k => {
     // can use data-binding to get
-    const keys = getFieldValue(`${titleKey}-keys`);
+    const keys = getFieldValue(`${dataKey}-keys`);
     // We need at least one passenger
     if (keys.length === 1) {
       return;
     }
     // can use data-binding to set
     setFieldsValue({
-      [`${titleKey}-keys`]: keys.filter(key => key !== k)
+      [`${dataKey}-keys`]: keys.filter(key => key !== k)
     });
   };
 
   const add = () => {
-    const keys = getFieldValue(`${titleKey}-keys`);
+    const keys = getFieldValue(`${dataKey}-keys`);
     setFieldsValue({
-      [`${titleKey}-keys`]: [...keys, currentId.current++]
+      [`${dataKey}-keys`]: [...keys, keys.length]
     });
   };
 
-  getFieldDecorator(`${titleKey}-keys`, { initialValue: [0] });
-  const keys = getFieldValue(`${titleKey}-keys`);
+  getFieldDecorator(`${dataKey}-keys`, { initialValue: [0] });
+  const keys = getFieldValue(`${dataKey}-keys`);
 
   return (
     <React.Fragment>
@@ -46,7 +44,7 @@ export default ({
             index > 0 ? { span: 12, offset: 4 } : { span: 12, offset: 1 }
           }
         >
-          {getFieldDecorator(`${title}[${k}]`, {
+          {getFieldDecorator(`${dataKey}[${k}]`, {
             rules: validationRules,
           })(
             isTextArea ? (

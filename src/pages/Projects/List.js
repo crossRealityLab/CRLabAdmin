@@ -1,22 +1,21 @@
-import React, { useCallback } from "react";
-import moment from "moment";
-import { Table, Divider, Tag } from "antd";
+import React, { useCallback } from 'react';
+import moment from 'moment';
+import { Table, Divider, Tag } from 'antd';
 
-import { getMockProjects } from "../../mockdata";
+import { getMockProjects } from '../../mockdata';
 
 const data = getMockProjects(20);
 
 export default () => {
-
   const renderTags = useCallback(
     tags => (
       <span>
         {tags.map(tag => {
-          let color = "green";
-          if (tag === "CHI") {
-            color = "volcano";
-          } else if (tag === "UIST") {
-            color = "geekblue";
+          let color = 'green';
+          if (tag === 'CHI') {
+            color = 'volcano';
+          } else if (tag === 'UIST') {
+            color = 'geekblue';
           }
           return (
             <Tag color={color} key={tag}>
@@ -33,7 +32,7 @@ export default () => {
     timestamp =>
       moment(timestamp)
         .local()
-        .format("YYYY/MM/DD HH:mm:ss"),
+        .format('YYYY/MM/DD HH:mm:ss'),
     []
   );
 
@@ -69,11 +68,7 @@ export default () => {
         key="timestamp"
         render={renderLastEditTime}
       />
-      <Table.Column
-        title="Action"
-        key="action"
-        render={renderAction}
-      />
+      <Table.Column title="Action" key="action" render={renderAction} />
     </Table>
   );
 };

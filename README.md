@@ -11,6 +11,7 @@ type Project = {
   authors: string[];
   cover: stirng;  // url
   imgs: {
+    uuid: string;
     caption: string;
     url: stirng;
   }[],
@@ -99,9 +100,12 @@ type Contact = {
 
 
 ## TODO
-* [] Modulelize 各個不同類型 Input
+* [x] Modulelize 各個不同類型 Input
   - Keep in components file
-* [] Validation
+* [] Img, Video with caption
+  - 不用 getFeildGenerator, 自行 control 元件
+  - Use getDownloadURL from firebase onComplete callback to get upload image url
+* [x] Validation
 * [] 調整各個 Input Field 寬度高度
 * [] 串接資料
   - 在 root (Edit.js/Create.js) 撰寫邏輯

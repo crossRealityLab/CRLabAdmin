@@ -4,7 +4,7 @@ export const getMockProjects = (count) => {
     showTitle: `SHOWTITLEEEEEE_${idx}`,
     title: `TITLETITLETITLETITLETITLETITLETITLE_${idx}`,
     year: 2019 + idx,
-    autors: [
+    authors: [
       'AUTHORS_1',
       'AUTHORS_2',
       'AUTHORS_3',
@@ -13,14 +13,17 @@ export const getMockProjects = (count) => {
     cover: 'https://dummyimage.com/420x320/ff7f7f/333333.png',
     imgs: [
       {
+        uuid: '0',
         caption: 'caption caption caption caption caption',
         url: 'https://dummyimage.com/420x320/ff7f7f/333333.png',
       },
       {
+        uuid: '1',
         caption: 'caption caption caption caption caption',
         url: 'https://dummyimage.com/420x320/ff7f7f/333333.png',
       },
       {
+        uuid: '2',
         caption: 'caption caption caption caption caption',
         url: 'https://dummyimage.com/420x320/ff7f7f/333333.png',
       },
@@ -51,7 +54,7 @@ export const getMockProjects = (count) => {
       'VR/AR'
     ],
     // --
-    publication: 'UIST',
+    publicationOn: 'UIST',
     acceptedYear: 2019,
     pdf: 'https://dummyimage.com/420x320/ff7f7f/333333.pdf',
     doi: 'https://dummyimage.com/420x320/ff7f7f/333333',
