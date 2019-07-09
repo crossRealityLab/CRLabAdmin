@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Icon, Upload, Modal, Input } from 'antd';
+import { Form, Icon, Upload, Modal, Input, message } from 'antd';
 import uuidV4 from 'uuid/v4';
 
 export default ({
@@ -67,6 +67,7 @@ export default ({
   const handleImgUpload = file => {
     const isImg = (file.type === 'image/jpeg' || file.type === 'image/png');
     if (!isImg) {
+      message.error('You can only upload JPG/PNG file!');
       return false;
     }
 

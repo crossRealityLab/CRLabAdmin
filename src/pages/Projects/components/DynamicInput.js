@@ -10,6 +10,7 @@ export default ({
   validationRules = [],
   isTextArea = false
 }) => {
+
   const remove = k => {
     // can use data-binding to get
     const keys = getFieldValue(`${dataKey}-keys`);

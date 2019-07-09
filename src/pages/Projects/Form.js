@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Input, Button, Spin, Icon } from 'antd';
+import styled from 'styled-components';
 
 import DynamicInput from './components/DynamicInput';
 import ImgUploader from './components/ImgUploader';
+import { create, get, getAll, update } from '../../apis';
 
 import { getMockProjects } from '../../mockdata';
+
+const LoadingIcon = styled(Icon)`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 24;
+`;
 
 const DATAKEYS = {
   SHOW_TITLE: 'showTitle',
@@ -28,7 +37,7 @@ const DATAKEYS = {
 };
 
 const fakeAPI = () => {
-  const mockdata = getMockProjects(1)[0];
+  const mockdata = getMockProjects(2)[1];
   return new Promise(resolve => {
     setTimeout(() => resolve(mockdata), 2000);
   });
@@ -41,10 +50,16 @@ const ProjectForm = ({ form, match }) => {
 
   const setInitFormValue = useCallback(
     data => {
-      // Set key first, delay calling after feild key created .
+      // ImageUploader's key and DyanmicInput keys need to be create and set first .
+      getFieldDecorator(DATAKEYS.IMGS);
+      getFieldDecorator(DATAKEYS.COVER);
+      getFieldDecorator(DATAKEYS.AUTHORS_KEYS);
+      getFieldDecorator(DATAKEYS.DESCRIPTIONS_KEYS);
+      getFieldDecorator(DATAKEYS.VIDEOS_KEYS);
+      getFieldDecorator(DATAKEYS.TAGS_KEYS);
 
       setFieldsValue({
-        imgs: data.imgs.map((imgInfo, idx) => ({
+        [DATAKEYS.IMGS]: data.imgs.map((imgInfo, idx) => ({
           uuid: imgInfo.uuid,
           file: {
             uid: `img-${idx}`,
@@ -54,7 +69,7 @@ const ProjectForm = ({ form, match }) => {
           },
           caption: imgInfo.caption
         })),
-        cover: [
+        [DATAKEYS.COVER]: [
           {
             file: {
               uid: 'cover',
@@ -65,70 +80,71 @@ const ProjectForm = ({ form, match }) => {
             caption: ''
           }
         ],
+        // Dynamic keys need to be set first, too.
+        [DATAKEYS.AUTHORS_KEYS]: [...Array(data.authors.length)].map(
+          (_elem, idx) => idx
+        ),
+        [DATAKEYS.VIDEOS_KEYS]: [...Array(data.videos.length)].map(
+          (_elem, idx) => idx
+        ),
+        [DATAKEYS.DESCRIPTIONS_KEYS]: [...Array(data.descriptions.length)].map(
+          (_elem, idx) => idx
+        ),
+        [DATAKEYS.TAGS_KEYS]: [...Array(data.tags.length)].map(
+          (_elem, idx) => idx
+        )
       });
 
-      setTimeout(() => {
-        setFieldsValue({
-          'videos-keys': [...Array(data.videos.length)].map(
-            (_elem, idx) => idx
-          ),
-          'authors-keys': [...Array(data.authors.length)].map(
-            (_elem, idx) => idx
-          ),
-          'descriptions-keys': [...Array(data.descriptions.length)].map(
-            (_elem, idx) => idx
-          ),
-          'tags-keys': [...Array(data.tags.length)].map((_elem, idx) => idx),
-        });
-      }, 0);
-
+      // Set after component create.
       setTimeout(() => {
         setFieldsValue({
           [DATAKEYS.SHOW_TITLE]: data.showTitle,
           [DATAKEYS.YEAR]: data.year,
           [DATAKEYS.TITLE]: data.title,
-          [DATAKEYS.AUTHORS]: data.authors,
           [DATAKEYS.ABSTRACT]: data.abstract,
-          [DATAKEYS.DESCRIPTIONS]: data.descriptions,
-          [DATAKEYS.TAGS]: data.tags,
           [DATAKEYS.ACCEPTED_YEAR]: data.acceptedYear,
           [DATAKEYS.DOI_LINK]: data.doi,
           [DATAKEYS.PUBLICATIONON]: data.publicationOn,
           [DATAKEYS.PDF_LINK]: data.pdf,
-          videos: data.videos.map(elem => elem.url)
-        })
+          [DATAKEYS.AUTHORS]: data.authors,
+          [DATAKEYS.DESCRIPTIONS]: data.descriptions,
+          [DATAKEYS.TAGS]: data.tags,
+          [DATAKEYS.VIDEOS]: data.videos.map(elem => elem.url)
+        });
       }, 0);
     },
-    [setFieldsValue]
+    [setFieldsValue, getFieldDecorator]
   );
 
-  const handleSubmit = useCallback(e => {
-    e.preventDefault();
-    validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }, []);
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
+      validateFields((err, data) => {
+        // Call Update api or Create api.
+        if (!err) {
+          console.log('Received values of form: ', data);
+          // return update(data.pid, data);
+        }
+        console.log('PROJECT ON SUBMIT ERROR:', err);
+      });
+    },
+    [validateFields]
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (pid) => {
       setIsLoading(true);
-      const data = await fakeAPI();
-      setData(data);
-      setInitFormValue(data);
+      const data = await get(pid);
+      if (data) {
+        setData(data);
+        console.log(data);
+        setInitFormValue(data);
+      }
       setIsLoading(false);
     };
 
-    const initBindingData = () => {
-      getFieldDecorator(DATAKEYS.IMGS);
-      getFieldDecorator(DATAKEYS.COVER);
-    };
-
-    initBindingData();
-
     if (match.params.pid) {
-      fetchData();
+      fetchData(match.params.pid);
     } else {
       setIsLoading(false);
     }
@@ -141,22 +157,7 @@ const ProjectForm = ({ form, match }) => {
   ]);
 
   if (isLoading) {
-    return (
-      <Spin
-        indicator={
-          <Icon
-            type="loading"
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              fontSize: 24
-            }}
-            spin
-          />
-        }
-      />
-    );
+    return <Spin indicator={<LoadingIcon type="loading" spin />} />;
   }
 
   return (
@@ -221,12 +222,7 @@ const ProjectForm = ({ form, match }) => {
         isSingleImg
         {...form}
       />
-      <ImgUploader
-        title="Imgs"
-        dataKey={DATAKEYS.IMGS} 
-        withCaption
-        {...form}
-      />
+      <ImgUploader title="Imgs" dataKey={DATAKEYS.IMGS} withCaption {...form} />
       <DynamicInput
         title="Videos"
         dataKey={DATAKEYS.VIDEOS}
