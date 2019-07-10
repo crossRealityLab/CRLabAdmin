@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Icon, Upload, Modal, Input, message } from 'antd';
 import uuidV4 from 'uuid/v4';
+import { uploadImg, removeImg } from '../../../apis/projects';
+
 
 export default ({
   title,
@@ -16,14 +18,34 @@ export default ({
     previewImage: ''
   });
 
-  /**
-   * To prevent realtime upload image to server
-   * ref: https://stackoverflow.com/questions/51514757/action-function-is-required-with-antd-upload-control-but-i-dont-need-it
-   */
-  const dummyRequest = ({ onSuccess }) => {
-    setTimeout(() => {
-      onSuccess('ok');
-    }, 0);
+  const customUpload = async ({ onError, onSuccess, file }) => {
+    try {
+      const fileName = file.name;
+      const { image, imageURL } = await uploadImg(fileName, file);
+      /**
+       * Why ...file will miss file.name ???
+       */
+      const newEntry = {
+        uuid: uuidV4(),
+        file: {
+          ...file,
+          name: fileName,
+          url: imageURL,
+        },
+        caption: ''
+      };
+  
+      const preData = getFieldValue(dataKey);
+  
+      setFieldsValue({
+        [dataKey]: [...preData, newEntry]
+      });
+
+      onSuccess(null, image)
+    }
+    catch(e) {
+      onError(e);
+    }
   };
 
   const getBase64 = file => {
@@ -71,18 +93,6 @@ export default ({
       return false;
     }
 
-    const newEntry = {
-      uuid: uuidV4(),
-      file,
-      caption: ''
-    };
-
-    const preData = getFieldValue(dataKey);
-
-    setFieldsValue({
-      [dataKey]: [...preData, newEntry]
-    });
-
     return true;
   };
 
@@ -114,6 +124,7 @@ export default ({
     });
 
     // remove from server if it's on server.
+    removeImg(file.name);
   };
 
   const getImgList = () => {
@@ -127,7 +138,7 @@ export default ({
         name="files"
         listType="picture-card"
         defaultFileList={getImgList()}
-        customRequest={dummyRequest}
+        customRequest={customUpload}
         onPreview={handlePreview}
         onRemove={handleImgRemove}
         beforeUpload={handleImgUpload}  // Use this hook due to onChange will trigger twice.
@@ -137,7 +148,7 @@ export default ({
           : uploadButton}
       </Upload>
       {withCaption && getFieldValue(dataKey).map(elem => (
-        <Input key={elem.uuid} value={elem.caption} onChange={handleCaptionInput(elem.uuid)} />
+        <Input key={elem.file.name} value={elem.caption} onChange={handleCaptionInput(elem.uuid)} />
       ))}
       <Modal
         visible={previewStatus.previewVisible}

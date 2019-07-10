@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Form, Input, Button, Icon } from "antd";
 
 export default ({
@@ -10,6 +10,9 @@ export default ({
   validationRules = [],
   isTextArea = false
 }) => {
+  getFieldDecorator(`${dataKey}-keys`, { initialValue: [0] });
+  const keys = getFieldValue(`${dataKey}-keys`);
+  const currentId = useRef(keys.length);
 
   const remove = k => {
     // can use data-binding to get
@@ -27,12 +30,13 @@ export default ({
   const add = () => {
     const keys = getFieldValue(`${dataKey}-keys`);
     setFieldsValue({
-      [`${dataKey}-keys`]: [...keys, keys.length]
+      [`${dataKey}-keys`]: [...keys, currentId.current]
     });
+
+    currentId.current = currentId.current + 1;
   };
 
-  getFieldDecorator(`${dataKey}-keys`, { initialValue: [0] });
-  const keys = getFieldValue(`${dataKey}-keys`);
+  
 
   return (
     <React.Fragment>

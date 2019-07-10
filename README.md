@@ -10,11 +10,11 @@ type Project = {
   year: number;
   authors: string[];
   cover: {
-    uuid: string;
+    name: string;
     url: string;
   },
   imgs: {
-    uuid: string;
+    name: string;
     caption: string;
     url: stirng;
   }[],

@@ -10,7 +10,7 @@ export const getMockProjects = (count) => {
       'AUTHORS_3',
       'AUTHORS_4',
     ],
-    cover: 'https://dummyimage.com/420x320/ff7f7f/333333.png',
+    cover: 'https://firebasestorage.googleapis.com/v0/b/crlab-admin.appspot.com/o/projects%2Fcover.png?alt=media&token=fb8b7c1d-c941-427a-8f64-1622068d11e7',
     imgs: [
       {
         uuid: '0',

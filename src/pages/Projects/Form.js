@@ -52,10 +52,30 @@ const uploadData = (data, uuid = '') => {
     DATAKEYS.VIDEOS_KEYS,
     DATAKEYS.DESCRIPTIONS_KEYS,
     DATAKEYS.TAGS_KEYS,
-    // FOR TEST
+    DATAKEYS.AUTHORS,
+    DATAKEYS.VIDEOS,
+    DATAKEYS.DESCRIPTIONS,
+    DATAKEYS.TAGS,
     DATAKEYS.IMGS,
     DATAKEYS.COVER
   ]);
+
+  result.imgs = data[DATAKEYS.IMGS].map(elem => ({
+    name: elem.file.name,
+    url: elem.file.url,
+    caption: elem.caption,
+  }));
+
+  result.cover = data[DATAKEYS.COVER].map(elem => ({
+    name: elem.file.name,
+    url: elem.file.url,
+  }));
+
+  result[DATAKEYS.AUTHORS] = data[DATAKEYS.AUTHORS].filter(elem => !!elem);
+  result[DATAKEYS.VIDEOS] = data[DATAKEYS.VIDEOS].filter(elem => !!elem);
+  result[DATAKEYS.DESCRIPTIONS] = data[DATAKEYS.DESCRIPTIONS].filter(elem => !!elem);
+  result[DATAKEYS.TAGS] = data[DATAKEYS.TAGS].filter(elem => !!elem);
+
 
   if (uuid) {
     result.uuid = uuid;
@@ -65,6 +85,7 @@ const uploadData = (data, uuid = '') => {
 
   result.uuid = uuidV4();
   result.createdTimestamp = Date.now();
+  result.timestamp = result.createdTimestamp;
   create(result.uuid, result);
 };
 
@@ -88,7 +109,7 @@ const ProjectForm = ({ form, match }) => {
           uuid: imgInfo.uuid,
           file: {
             uid: `img-${idx}`,
-            name: `img-${idx}.png`,
+            name: imgInfo.name,
             status: 'done',
             url: imgInfo.url
           },
@@ -98,9 +119,9 @@ const ProjectForm = ({ form, match }) => {
           {
             file: {
               uid: 'cover',
-              name: 'cover.png',
+              name: data.cover[0].name,
               status: 'done',
-              url: data.cover
+              url: data.cover[0].url
             },
             caption: ''
           }
@@ -147,8 +168,9 @@ const ProjectForm = ({ form, match }) => {
       validateFields((err, data) => {
         if (!err) {
           console.log('Received values of form: ', data);
-          uploadData(data, match.params.uuid);
-        } else console.log('PROJECT ON SUBMIT ERROR:', err);
+          return uploadData(data, match.params.uuid);
+        } 
+        console.log('PROJECT ON SUBMIT ERROR:', err);
       });
     },
     [validateFields, match.params.uuid]
@@ -161,7 +183,6 @@ const ProjectForm = ({ form, match }) => {
       const data = await get(uuid);
       if (data) {
         setData(data);
-        console.log(data);
         setInitFormValue(data);
       }
       setIsLoading(false);
