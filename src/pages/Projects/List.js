@@ -1,12 +1,38 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Table, Divider, Tag } from 'antd';
+import _ from 'lodash';
 
+import { getAll, remove } from '../../apis/projects';
 import { getMockProjects } from '../../mockdata';
 
 const data = getMockProjects(20);
 
 export default () => {
+
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAll();
+      // console.log(_.values(data))
+      setList(_.values(data));
+    };
+
+    fetchData();
+  }, []);
+
+  const onRemove = async uuid => {
+    console.log(remove);
+    try {
+      await remove(uuid);
+      setList(preList => preList.filter(elem => elem.uuid !== uuid));
+    } catch (e) {
+
+    }
+  };
+
   const renderTags = useCallback(
     tags => (
       <span>
@@ -39,22 +65,22 @@ export default () => {
   const renderAction = useCallback(
     (text, record) => (
       <span>
-        <a href="javascript:;">Edit</a>
+        <Link to={`/0/${record.uuid}/edit`}>Edit</Link>
         <Divider type="vertical" />
-        <a href="javascript:;">Delete</a>
+        <div onClick={() => onRemove(record.uuid)}>Delete</div>
       </span>
     ),
     []
   );
 
   return (
-    <Table dataSource={data}>
+    <Table dataSource={list}>
       <Table.Column title="Title" dataIndex="title" key="title" />
       <Table.Column
         title="Year"
         dataIndex="year"
         key="year"
-        sorter={(a, b) => a.year - b.year}
+        sorter={(a, b) => parseInt(a.year) - parseInt(b.year)}
       />
       <Table.Column
         title="Tags"

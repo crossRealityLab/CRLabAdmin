@@ -39,7 +39,7 @@ export const update = (uuid, data) => {
 };
 
 export const remove = uuid => {
-  db.ref(`/projects/${uuid}`)
+  return db.ref(`/projects/${uuid}`)
     .remove()
     .then(() => console.log(`REMOVE PROJECT ${uuid} COMPLETE`))
     .catch(e => console.error(`REMOVE PROJECT ${uuid} ERROR: ${e}`));
