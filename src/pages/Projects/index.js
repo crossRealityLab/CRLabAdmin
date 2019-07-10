@@ -9,7 +9,7 @@ export default ({ match }) => {
   return (
     <Switch>
       <Route exact path={`${url}/list`} component={List} />
-      <Route path={`${url}/:pid/edit`} component={Form} />
+      <Route path={`${url}/:uuid/edit`} component={Form} />
       <Route path={`${url}/create`} component={Form} />
       <Redirect from="*" to={`${url}/list`} />
     </Switch>

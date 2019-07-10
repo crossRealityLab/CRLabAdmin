@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Input, Button, Spin, Icon } from 'antd';
 import styled from 'styled-components';
+import _ from 'loadsh';
+import uuidV4 from 'uuid/v4';
 
 import DynamicInput from './components/DynamicInput';
 import ImgUploader from './components/ImgUploader';
-import { create, get, getAll, update } from '../../apis';
+import { create, get, update } from '../../apis/projects';
 
 import { getMockProjects } from '../../mockdata';
 
@@ -15,6 +17,7 @@ const LoadingIcon = styled(Icon)`
   font-size: 24;
 `;
 
+// Local data spec.
 const DATAKEYS = {
   SHOW_TITLE: 'showTitle',
   TITLE: 'title',
@@ -43,6 +46,28 @@ const fakeAPI = () => {
   });
 };
 
+const uploadData = (data, uuid = '') => {
+  const result = _.omit(data, [
+    DATAKEYS.AUTHORS_KEYS,
+    DATAKEYS.VIDEOS_KEYS,
+    DATAKEYS.DESCRIPTIONS_KEYS,
+    DATAKEYS.TAGS_KEYS,
+    // FOR TEST
+    DATAKEYS.IMGS,
+    DATAKEYS.COVER
+  ]);
+
+  if (uuid) {
+    result.uuid = uuid;
+    result.timestamp = Date.now();
+    return update(uuid, result);
+  }
+
+  result.uuid = uuidV4();
+  result.createdTimestamp = Date.now();
+  create(result.uuid, result);
+};
+
 const ProjectForm = ({ form, match }) => {
   const { validateFields, getFieldDecorator, setFieldsValue } = form;
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +84,7 @@ const ProjectForm = ({ form, match }) => {
       getFieldDecorator(DATAKEYS.TAGS_KEYS);
 
       setFieldsValue({
-        [DATAKEYS.IMGS]: data.imgs.map((imgInfo, idx) => ({
+        [DATAKEYS.IMGS]: data.imgs ? data.imgs.map((imgInfo, idx) => ({
           uuid: imgInfo.uuid,
           file: {
             uid: `img-${idx}`,
@@ -68,8 +93,8 @@ const ProjectForm = ({ form, match }) => {
             url: imgInfo.url
           },
           caption: imgInfo.caption
-        })),
-        [DATAKEYS.COVER]: [
+        })) : [],
+        [DATAKEYS.COVER]: data.cover ? [
           {
             file: {
               uid: 'cover',
@@ -79,7 +104,7 @@ const ProjectForm = ({ form, match }) => {
             },
             caption: ''
           }
-        ],
+        ]: [],
         // Dynamic keys need to be set first, too.
         [DATAKEYS.AUTHORS_KEYS]: [...Array(data.authors.length)].map(
           (_elem, idx) => idx
@@ -109,7 +134,7 @@ const ProjectForm = ({ form, match }) => {
           [DATAKEYS.AUTHORS]: data.authors,
           [DATAKEYS.DESCRIPTIONS]: data.descriptions,
           [DATAKEYS.TAGS]: data.tags,
-          [DATAKEYS.VIDEOS]: data.videos.map(elem => elem.url)
+          [DATAKEYS.VIDEOS]: data.videos,
         });
       }, 0);
     },
@@ -120,21 +145,20 @@ const ProjectForm = ({ form, match }) => {
     e => {
       e.preventDefault();
       validateFields((err, data) => {
-        // Call Update api or Create api.
         if (!err) {
           console.log('Received values of form: ', data);
-          // return update(data.pid, data);
-        }
-        console.log('PROJECT ON SUBMIT ERROR:', err);
+          uploadData(data, match.params.uuid);
+        } else console.log('PROJECT ON SUBMIT ERROR:', err);
       });
     },
-    [validateFields]
+    [validateFields, match.params.uuid]
   );
 
   useEffect(() => {
-    const fetchData = async (pid) => {
+    const fetchData = async uuid => {
       setIsLoading(true);
-      const data = await get(pid);
+      // const data = await fakeAPI();
+      const data = await get(uuid);
       if (data) {
         setData(data);
         console.log(data);
@@ -143,8 +167,8 @@ const ProjectForm = ({ form, match }) => {
       setIsLoading(false);
     };
 
-    if (match.params.pid) {
-      fetchData(match.params.pid);
+    if (match.params.uuid) {
+      fetchData(match.params.uuid);
     } else {
       setIsLoading(false);
     }
@@ -153,7 +177,7 @@ const ProjectForm = ({ form, match }) => {
     setData,
     setInitFormValue,
     getFieldDecorator,
-    match.params.pid
+    match.params.uuid
   ]);
 
   if (isLoading) {
@@ -166,8 +190,8 @@ const ProjectForm = ({ form, match }) => {
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 12, offset: 1 }}
     >
-      <Form.Item label="PID">
-        {data.pid ? <strong>{data.pid}</strong> : ''}
+      <Form.Item label="UUID">
+        {data.uuid ? <strong>{data.uuid}</strong> : ''}
       </Form.Item>
       <Form.Item label="Show title">
         {getFieldDecorator(DATAKEYS.SHOW_TITLE, {
@@ -259,13 +283,16 @@ const ProjectForm = ({ form, match }) => {
       />
       <DynamicInput title="Tags" dataKey={DATAKEYS.TAGS} {...form} />
       <Form.Item label="Publication on">
-        {getFieldDecorator(DATAKEYS.PUBLICATIONON)(<Input />)}
+        {getFieldDecorator(DATAKEYS.PUBLICATIONON, {
+          initialValue: ''
+        })(<Input />)}
       </Form.Item>
       <Form.Item label="Accepted year">
         {getFieldDecorator(DATAKEYS.ACCEPTED_YEAR, {
+          initialValue: '',
           rules: [
             {
-              type: 'number',
+              validator: (_rule, value) => !isNaN(value),
               message: 'Input must be a number.'
             }
           ]
@@ -273,6 +300,7 @@ const ProjectForm = ({ form, match }) => {
       </Form.Item>
       <Form.Item label="PDF link">
         {getFieldDecorator(DATAKEYS.PDF_LINK, {
+          initialValue: '',
           rules: [
             {
               type: 'url',
@@ -283,6 +311,7 @@ const ProjectForm = ({ form, match }) => {
       </Form.Item>
       <Form.Item label="DOI link">
         {getFieldDecorator(DATAKEYS.DOI_LINK, {
+          initialValue: '',
           rules: [
             {
               type: 'url',

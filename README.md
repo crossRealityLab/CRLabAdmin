@@ -4,25 +4,26 @@
 
 ``` typescript
 type Project = {
-  pid: string;
+  uuid: string;
   showTitle: string;
   title: string;
   year: number;
   authors: string[];
-  cover: stirng;  // url
+  cover: {
+    uuid: string;
+    url: string;
+  },
   imgs: {
     uuid: string;
     caption: string;
     url: stirng;
   }[],
-  videos: {
-    caption: string;
-    url: string;
-  }[]
+  videos: string[]; // url
   abstract: string;
   descriptions: string[];  // 用 array 來分段
   tags: string[];
-  timestamp: number;
+  createdTimestamp: number;
+  timestamp: number;  // last update time
   // If is accepted by conference
   publication?: string;  // e.g. CHI UIST 
   acceptedYear?: number;
