@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Form, Icon, Upload, Modal, Input, message } from 'antd';
+import { Icon, Upload, Modal, Input, message } from 'antd';
 import uuidV4 from 'uuid/v4';
 import { uploadImg, removeImg } from '../../../apis/projects';
 
-
 export default ({
-  title,
   dataKey,
   getFieldDecorator,
   getFieldValue,
@@ -31,20 +29,19 @@ export default ({
         file: {
           ...file,
           name: fileName,
-          url: imageURL,
+          url: imageURL
         },
         caption: ''
       };
-  
+
       const preData = getFieldValue(dataKey);
-  
+
       setFieldsValue({
         [dataKey]: [...preData, newEntry]
       });
 
-      onSuccess(null, image)
-    }
-    catch(e) {
+      onSuccess(null, image);
+    } catch (e) {
       onError(e);
     }
   };
@@ -88,7 +85,7 @@ export default ({
   getFieldDecorator(dataKey, { initialValue: [] });
 
   const handleImgUpload = file => {
-    const isImg = (file.type === 'image/jpeg' || file.type === 'image/png');
+    const isImg = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isImg) {
       message.error('You can only upload JPG/PNG file!');
       return false;
@@ -116,7 +113,7 @@ export default ({
     });
   };
 
-  const handleImgRemove = (file) => {
+  const handleImgRemove = file => {
     const preData = getFieldValue(dataKey);
     const newData = preData.filter(elem => !(elem.file.uid === file.uid));
 
@@ -135,7 +132,7 @@ export default ({
   };
 
   return (
-    <Form.Item label={title}>
+    <>
       <Upload
         name="files"
         listType="picture-card"
@@ -143,15 +140,22 @@ export default ({
         customRequest={customUpload}
         onPreview={handlePreview}
         onRemove={handleImgRemove}
-        beforeUpload={handleImgUpload}  // Use this hook due to onChange will trigger twice.
+        beforeUpload={handleImgUpload} // Use this hook due to onChange will trigger twice.
       >
-        {isSingleImg && getFieldValue(dataKey) && getFieldValue(dataKey).length >= 1
+        {isSingleImg &&
+        getFieldValue(dataKey) &&
+        getFieldValue(dataKey).length >= 1
           ? null
           : uploadButton}
       </Upload>
-      {withCaption && getFieldValue(dataKey).map(elem => (
-        <Input key={elem.file.name} value={elem.caption} onChange={handleCaptionInput(elem.uuid)} />
-      ))}
+      {withCaption &&
+        getFieldValue(dataKey).map(elem => (
+          <Input
+            key={elem.file.name}
+            value={elem.caption}
+            onChange={handleCaptionInput(elem.uuid)}
+          />
+        ))}
       <Modal
         visible={previewStatus.previewVisible}
         footer={null}
@@ -163,6 +167,6 @@ export default ({
           src={previewStatus.previewImage}
         />
       </Modal>
-    </Form.Item>
+    </>
   );
 };

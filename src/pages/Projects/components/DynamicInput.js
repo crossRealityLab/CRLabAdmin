@@ -1,8 +1,7 @@
-import React, { useRef } from "react";
-import { Form, Input, Button, Icon } from "antd";
+import React, { useRef } from 'react';
+import { Form, Input, Button, Icon } from 'antd';
 
 export default ({
-  title,
   dataKey,
   getFieldDecorator,
   getFieldValue,
@@ -36,26 +35,22 @@ export default ({
     currentId.current = currentId.current + 1;
   };
 
-  
-
   return (
     <React.Fragment>
-      {keys.map((k, index) => (
+      {keys.map(k => (
         <Form.Item
-          label={index === 0 ? `${title}` : ""}
+          style={{ width: '150%', marginBottom: '-20px' }}
           required={false}
           key={k}
-          wrapperCol={
-            index > 0 ? { span: 12, offset: 4 } : { span: 12, offset: 1 }
-          }
+          wrapperCol={{ span: 20 }}
         >
           {getFieldDecorator(`${dataKey}[${k}]`, {
-            rules: validationRules,
+            rules: validationRules
           })(
             isTextArea ? (
-              <Input.TextArea style={{ width: "80%" }} autosize />
+              <Input.TextArea style={{ width: '80%' }} autosize />
             ) : (
-              <Input style={{ width: "80%" }} />
+              <Input style={{ width: '80%' }} />
             )
           )}
           {keys.length > 1 ? (
@@ -68,8 +63,8 @@ export default ({
           ) : null}
         </Form.Item>
       ))}
-      <Form.Item wrapperCol={{ span: 12, offset: 4 }}>
-        <Button type="dashed" onClick={add} style={{ width: "60%" }}>
+      <Form.Item wrapperCol={{ span: 12, offset: 2 }} style={{ marginBottom: 'unset' }}>
+        <Button type="dashed" onClick={add} style={{ width: '60%'}}>
           <Icon type="plus" /> Add field
         </Button>
       </Form.Item>

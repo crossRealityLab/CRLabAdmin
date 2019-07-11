@@ -1,12 +1,12 @@
-import React from "react";
-import styled from "styled-components";
-import { NavLink, Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { Layout, Menu, Icon } from "antd";
+import React from 'react';
+import styled from 'styled-components';
+import { NavLink, Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Layout, Menu, Icon } from 'antd';
 
-import Logo from "./components/Logo";
-import Members from "./pages/Members";
-import News from "./pages/News";
-import Projects from "./pages/Projects";
+import Logo from './components/Logo';
+import Members from './pages/Members';
+import News from './pages/News';
+import Projects from './pages/Projects';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -18,7 +18,7 @@ const Link = styled(NavLink)`
 
 function App() {
   return (
-    <Layout style={{ minWidth: "100vw", minHeight: "100vh" }}>
+    <Layout style={{ minWidth: '100vw', minHeight: '100vh' }}>
       <Sider breakpoint="lg" collapsedWidth="0">
         <Logo>Cross Reality Lab</Logo>
         <Menu theme="dark" mode="inline" selectedKeys={[]}>
@@ -43,8 +43,8 @@ function App() {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: "#fff", padding: 0 }} />
-        <Content style={{ margin: "24px 16px 0" }}>
+        <Header style={{ background: '#fff', padding: 0 }} />
+        <Content style={{ margin: '24px 16px 0' }}>
           <Switch>
             <Route path="/0" component={Projects} />
             <Route path="/1" component={Members} />
@@ -52,8 +52,8 @@ function App() {
             <Redirect to="/0" />
           </Switch>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Cross Reality Lab Admin ©2019 Created by
+        <Footer style={{ textAlign: 'center' }}>
+          Cross Reality Lab Admin ©2019
         </Footer>
       </Layout>
     </Layout>

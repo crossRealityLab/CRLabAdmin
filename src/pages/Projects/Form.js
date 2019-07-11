@@ -1,15 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button, Spin, Icon, notification } from 'antd';
+import { Form, Button, Spin, Icon, notification } from 'antd';
 import styled from 'styled-components';
 import _ from 'loadsh';
 import uuidV4 from 'uuid/v4';
 
 import DynamicInput from './components/DynamicInput';
 import ImgUploader from './components/ImgUploader';
+import Input from './components/Input';
+import TextArea from './components/TextArea';
+
 import { create, get, update } from '../../apis/projects';
 
 import { getMockProjects } from '../../mockdata';
+
+const fakeAPI = () => {
+  const mockdata = getMockProjects(2)[1];
+  return new Promise(resolve => {
+    setTimeout(() => resolve(mockdata), 2000);
+  });
+};
 
 const LoadingIcon = styled(Icon)`
   position: absolute;
@@ -49,13 +59,6 @@ const DATAKEYS = {
   DOI_LINK: 'doi'
 };
 
-const fakeAPI = () => {
-  const mockdata = getMockProjects(2)[1];
-  return new Promise(resolve => {
-    setTimeout(() => resolve(mockdata), 2000);
-  });
-};
-
 const uploadData = async (data, uuid = '') => {
   const result = _.omit(data, [
     DATAKEYS.AUTHORS_KEYS,
@@ -73,17 +76,19 @@ const uploadData = async (data, uuid = '') => {
   result.imgs = data[DATAKEYS.IMGS].map(elem => ({
     name: elem.file.name,
     url: elem.file.url,
-    caption: elem.caption,
+    caption: elem.caption
   }));
 
   result.cover = data[DATAKEYS.COVER].map(elem => ({
     name: elem.file.name,
-    url: elem.file.url,
+    url: elem.file.url
   }));
 
   result[DATAKEYS.AUTHORS] = data[DATAKEYS.AUTHORS].filter(elem => !!elem);
   result[DATAKEYS.VIDEOS] = data[DATAKEYS.VIDEOS].filter(elem => !!elem);
-  result[DATAKEYS.DESCRIPTIONS] = data[DATAKEYS.DESCRIPTIONS].filter(elem => !!elem);
+  result[DATAKEYS.DESCRIPTIONS] = data[DATAKEYS.DESCRIPTIONS].filter(
+    elem => !!elem
+  );
   result[DATAKEYS.TAGS] = data[DATAKEYS.TAGS].filter(elem => !!elem);
 
   try {
@@ -116,59 +121,71 @@ const ProjectForm = ({ form, match, history }) => {
       getFieldDecorator(DATAKEYS.DESCRIPTIONS_KEYS);
       getFieldDecorator(DATAKEYS.VIDEOS_KEYS);
       getFieldDecorator(DATAKEYS.TAGS_KEYS);
+      getFieldDecorator(DATAKEYS.SHOW_TITLE);
+      getFieldDecorator(DATAKEYS.YEAR);
+      getFieldDecorator(DATAKEYS.TITLE);
+      getFieldDecorator(DATAKEYS.ABSTRACT);
+      getFieldDecorator(DATAKEYS.ACCEPTED_YEAR);
+      getFieldDecorator(DATAKEYS.DOI_LINK);
+      getFieldDecorator(DATAKEYS.PDF_LINK);
+      getFieldDecorator(DATAKEYS.PUBLICATIONON);
 
       setFieldsValue({
-        [DATAKEYS.IMGS]: data.imgs ? data.imgs.map((imgInfo, idx) => ({
-          uuid: imgInfo.uuid,
-          file: {
-            uid: `img-${idx}`,
-            name: imgInfo.name,
-            status: 'done',
-            url: imgInfo.url
-          },
-          caption: imgInfo.caption
-        })) : [],
-        [DATAKEYS.COVER]: data.cover ? [
-          {
-            file: {
-              uid: 'cover',
-              name: data.cover[0].name,
-              status: 'done',
-              url: data.cover[0].url
-            },
-            caption: ''
-          }
-        ]: [],
+        [DATAKEYS.IMGS]: data.imgs
+          ? data.imgs.map((imgInfo, idx) => ({
+              uuid: imgInfo.uuid,
+              file: {
+                uid: `img-${idx}`,
+                name: imgInfo.name,
+                status: 'done',
+                url: imgInfo.url
+              },
+              caption: imgInfo.caption
+            }))
+          : [],
+        [DATAKEYS.COVER]: data.cover
+          ? [
+              {
+                file: {
+                  uid: 'cover',
+                  name: data.cover[0].name,
+                  status: 'done',
+                  url: data.cover[0].url
+                },
+                caption: ''
+              }
+            ]
+          : [],
         // Dynamic keys need to be set first, too.
-        [DATAKEYS.AUTHORS_KEYS]:  data.authors ? [...Array(data.authors.length)].map(
-          (_elem, idx) => idx
-        ) : [0],
-        [DATAKEYS.VIDEOS_KEYS]: data.videos ? [...Array(data.videos.length)].map(
-          (_elem, idx) => idx
-        ): [0],
-        [DATAKEYS.DESCRIPTIONS_KEYS]: data.descriptions ? [...Array(data.descriptions.length)].map(
-          (_elem, idx) => idx
-        ): [0],
-        [DATAKEYS.TAGS_KEYS]: data.tags ? [...Array(data.tags.length)].map(
-          (_elem, idx) => idx
-        ): [0]
+        [DATAKEYS.AUTHORS_KEYS]: data.authors
+          ? [...Array(data.authors.length)].map((_elem, idx) => idx)
+          : [0],
+        [DATAKEYS.VIDEOS_KEYS]: data.videos
+          ? [...Array(data.videos.length)].map((_elem, idx) => idx)
+          : [0],
+        [DATAKEYS.DESCRIPTIONS_KEYS]: data.descriptions
+          ? [...Array(data.descriptions.length)].map((_elem, idx) => idx)
+          : [0],
+        [DATAKEYS.TAGS_KEYS]: data.tags
+          ? [...Array(data.tags.length)].map((_elem, idx) => idx)
+          : [0],
+        [DATAKEYS.SHOW_TITLE]: data.showTitle,
+        [DATAKEYS.YEAR]: data.year,
+        [DATAKEYS.TITLE]: data.title,
+        [DATAKEYS.ABSTRACT]: data.abstract,
+        [DATAKEYS.ACCEPTED_YEAR]: data.acceptedYear,
+        [DATAKEYS.DOI_LINK]: data.doi,
+        [DATAKEYS.PUBLICATIONON]: data.publicationOn,
+        [DATAKEYS.PDF_LINK]: data.pdf
       });
 
       // Set after component create.
       setTimeout(() => {
         setFieldsValue({
-          [DATAKEYS.SHOW_TITLE]: data.showTitle,
-          [DATAKEYS.YEAR]: data.year,
-          [DATAKEYS.TITLE]: data.title,
-          [DATAKEYS.ABSTRACT]: data.abstract,
-          [DATAKEYS.ACCEPTED_YEAR]: data.acceptedYear,
-          [DATAKEYS.DOI_LINK]: data.doi,
-          [DATAKEYS.PUBLICATIONON]: data.publicationOn,
-          [DATAKEYS.PDF_LINK]: data.pdf,
           [DATAKEYS.AUTHORS]: data.authors,
           [DATAKEYS.DESCRIPTIONS]: data.descriptions,
           [DATAKEYS.TAGS]: data.tags,
-          [DATAKEYS.VIDEOS]: data.videos,
+          [DATAKEYS.VIDEOS]: data.videos
         });
       }, 0);
     },
@@ -185,16 +202,16 @@ const ProjectForm = ({ form, match, history }) => {
             await uploadData(data, match.params.uuid);
             notification.success({
               message: `Create/Edit ${data.title} complete!`,
-              duration: 4,
+              duration: 4
             });
             history.push(`/0/list`);
           } catch (e) {
             notification.error({
               message: `Create ${data.title} error!`,
-              duration: 2,
+              duration: 2
             });
-          }       
-        } 
+          }
+        }
         console.log('PROJECT ON SUBMIT ERROR:', err);
       });
     },
@@ -204,8 +221,8 @@ const ProjectForm = ({ form, match, history }) => {
   useEffect(() => {
     const fetchData = async uuid => {
       setIsLoading(true);
-      // const data = await fakeAPI();
-      const data = await get(uuid);
+      const data = await fakeAPI();
+      // const data = await get(uuid);
       if (data) {
         setData(data);
         setInitFormValue(data);
@@ -240,29 +257,34 @@ const ProjectForm = ({ form, match, history }) => {
         {data.uuid ? <strong>{data.uuid}</strong> : ''}
       </Form.Item>
       <Form.Item label="Show title">
-        {getFieldDecorator(DATAKEYS.SHOW_TITLE, {
-          rules: [
+        <Input
+          dataKey={DATAKEYS.SHOW_TITLE}
+          validationRules={[
             {
               required: true,
               message:
                 'Please set the show title which will show on the enter image of this project.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
       <Form.Item label="Title">
-        {getFieldDecorator(DATAKEYS.TITLE, {
-          rules: [
+        <Input
+          dataKey={DATAKEYS.TITLE}
+          validationRules={[
             {
               required: true,
               message: 'Please set the title of this project.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
       <Form.Item label="Year">
-        {getFieldDecorator(DATAKEYS.YEAR, {
-          rules: [
+        <Input
+          dataKey={DATAKEYS.YEAR}
+          validationRules={[
             {
               validator: (_rule, value) => !isNaN(value),
               message: 'The input must be a number.'
@@ -271,109 +293,124 @@ const ProjectForm = ({ form, match, history }) => {
               required: true,
               message: 'Please set the starting year of this project.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
-      <DynamicInput
-        title="Authors"
-        dataKey={DATAKEYS.AUTHORS}
-        validationRules={[
-          {
-            required: true,
-            message:
-              'Please set at least one author of this project, and remove unuse feild.'
-          }
-        ]}
-        {...form}
-      />
-      <ImgUploader
-        title="Cover"
-        dataKey={DATAKEYS.COVER}
-        isSingleImg
-        {...form}
-      />
-      <ImgUploader title="Imgs" dataKey={DATAKEYS.IMGS} withCaption {...form} />
-      <DynamicInput
-        title="Videos"
-        dataKey={DATAKEYS.VIDEOS}
-        validationRules={[
-          {
-            type: 'url',
-            message: 'Input must be a link.'
-          }
-        ]}
-        {...form}
-      />
+      <Form.Item label="Authors">
+        <DynamicInput
+          dataKey={DATAKEYS.AUTHORS}
+          validationRules={[
+            {
+              required: true,
+              message:
+                'Please set at least one author of this project, and remove unuse feild.'
+            }
+          ]}
+          {...form}
+        />
+      </Form.Item>
+      <Form.Item label="Cover">
+        <ImgUploader
+          title="Cover"
+          dataKey={DATAKEYS.COVER}
+          isSingleImg
+          {...form}
+        />
+      </Form.Item>
+      <Form.Item label="Images">
+        <ImgUploader
+          dataKey={DATAKEYS.IMGS}
+          withCaption
+          {...form}
+        />
+      </Form.Item>
+      <Form.Item label="Videos">
+        <DynamicInput
+          dataKey={DATAKEYS.VIDEOS}
+          validationRules={[
+            {
+              type: 'url',
+              message: 'Input must be a link.'
+            }
+          ]}
+          {...form}
+        />
+      </Form.Item>
       <Form.Item label="Abstract">
-        {getFieldDecorator(DATAKEYS.ABSTRACT, {
-          rules: [
+        <TextArea
+          dataKey={DATAKEYS.ABSTRACT}
+          validationRules={[
             {
               required: true,
               message: 'Please set the abstract of this project.'
             }
-          ]
-        })(<Input.TextArea autosize />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
-      <DynamicInput
-        title="Descriptions"
-        dataKey={DATAKEYS.DESCRIPTIONS}
-        validationRules={[
-          {
-            required: true,
-            message:
-              'Please set at least one description section of this project, and remove unuse feild.'
-          }
-        ]}
-        isTextArea
-        {...form}
-      />
-      <DynamicInput title="Tags" dataKey={DATAKEYS.TAGS} {...form} />
+      <Form.Item label="Descriptions">
+        <DynamicInput
+          dataKey={DATAKEYS.DESCRIPTIONS}
+          validationRules={[
+            {
+              required: true,
+              message:
+                'Please set at least one description section of this project, and remove unuse feild.'
+            }
+          ]}
+          isTextArea
+          {...form}
+        />
+      </Form.Item>
+      <Form.Item label="Tags">
+        <DynamicInput dataKey={DATAKEYS.TAGS} {...form} />
+      </Form.Item>
       <Form.Item label="Publication on">
-        {getFieldDecorator(DATAKEYS.PUBLICATIONON, {
-          initialValue: ''
-        })(<Input />)}
+        <Input dataKey={DATAKEYS.PUBLICATIONON} {...form} />
       </Form.Item>
       <Form.Item label="Accepted year">
-        {getFieldDecorator(DATAKEYS.ACCEPTED_YEAR, {
-          initialValue: '',
-          rules: [
+        <Input
+          dataKey={DATAKEYS.ACCEPTED_YEAR}
+          validationRules={[
             {
               validator: (_rule, value) => !isNaN(value),
               message: 'Input must be a number.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
       <Form.Item label="PDF link">
-        {getFieldDecorator(DATAKEYS.PDF_LINK, {
-          initialValue: '',
-          rules: [
+        <Input
+          dataKey={DATAKEYS.PDF_LINK}
+          validationRules={[
             {
               type: 'url',
               message: 'Input must be a link.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
       <Form.Item label="DOI link">
-        {getFieldDecorator(DATAKEYS.DOI_LINK, {
-          initialValue: '',
-          rules: [
+        <Input
+          dataKey={DATAKEYS.DOI_LINK}
+          validationRules={[
             {
               type: 'url',
               message: 'Input must be a link.'
             }
-          ]
-        })(<Input />)}
+          ]}
+          {...form}
+        />
       </Form.Item>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
         <Link to="/0/list">
-          <Button type="danger">
-            Back
-          </Button>
+          <Button type="danger">Back</Button>
         </Link>
       </ButtonWrapper>
     </Form>
