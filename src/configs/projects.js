@@ -2,39 +2,70 @@
  * In order to work with antd Form data binding
  */
 
-export const localDataBindingConf = {
-  showTitle: {
+export const dataBindingConfs = [
+  {
     key: 'showTitle',
-    initialValue: '',
+    defaultValue: ''
   },
-  title: {
+  {
     key: 'title',
-    initialValue: '',
+    defaultValue: ''
   },
-  year: {
+  {
     key: 'year',
-    initialValue: 0,
+    defaultValue: 0
   },
-  authors: {
+  {
     key: 'authors',
+    defaultValue: [],
+    withLocalKey: true
   },
-  SHOW_TITLE: 'showTitle',
-  TITLE: 'title',
-  YEAR: 'year',
-  
-  AUTHORS_KEYS: 'authors-keys',
-  ABSTRACT: 'abstract',
-  COVER: 'cover',
-  IMGS: 'imgs',
-  VIDEOS: 'videos',
-  VIDEOS_KEYS: 'videos-keys',
-  DESCRIPTIONS: 'descriptions',
-  DESCRIPTIONS_KEYS: 'descriptions-keys',
-  TAGS: 'tags',
-  TAGS_KEYS: 'tags-keys',
-  PUBLICATIONON: 'publicationOn',
-  ACCEPTED_YEAR: 'acceptedYear',
-  PDF_LINK: 'pdf',
-  DOI_LINK: 'doi'
-};
+  {
+    key: 'abstract',
+    defaultValue: ''
+  },
+  {
+    key: 'cover',
+    defaultValue: [],
+  },
+  {
+    key: 'imgs',
+    defaultValue: []
+  },
+  {
+    key: 'videos',
+    defaultValue: [],
+    withLocalKey: true
+  },
+  {
+    key: 'descriptions',
+    defaultValue: [],
+    withLocalKey: true
+  },
+  {
+    key: 'tags',
+    defaultValue: [],
+    withLocalKey: true
+  },
+  {
+    key: 'acceptedYear',
+    defaultValue: 0
+  },
+  {
+    key: 'publicationOn',
+    defaultValue: ''
+  },
+  {
+    key: 'pdf',
+    defaultValue: ''
+  },
+  {
+    key: 'doi',
+    defaultValue: ''
+  }
+];
 
+export const dataBindingKeys = dataBindingConfs.reduce(
+  (acc, current) => ({ ...acc, [current.key]: current.key }),
+  {}
+);

@@ -10,6 +10,7 @@ import ImgUploader from './components/ImgUploader';
 import Input from './components/Input';
 import TextArea from './components/TextArea';
 
+import { dataBindingConfs, dataBindingKeys } from '../../configs/projects';
 import { create, get, update } from '../../apis/projects';
 
 import { getMockProjects } from '../../mockdata';
@@ -112,84 +113,68 @@ const ProjectForm = ({ form, match, history }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
 
+  const createDataBinder = useCallback(() => {
+    dataBindingConfs.forEach(elem => {
+      if (elem.withLocalKey) {
+        // Create ''only'' local key binder first when it's dynamic input, otherwise it will crash .
+        getFieldDecorator(`${elem.key}-idx`);
+      } else {
+        getFieldDecorator(elem.key);
+      }
+    });
+  }, [getFieldDecorator]);
+
   const setInitFormValue = useCallback(
     data => {
-      // ImageUploader's key and DyanmicInput keys need to be create and set first .
-      getFieldDecorator(DATAKEYS.IMGS);
-      getFieldDecorator(DATAKEYS.COVER);
-      getFieldDecorator(DATAKEYS.AUTHORS_KEYS);
-      getFieldDecorator(DATAKEYS.DESCRIPTIONS_KEYS);
-      getFieldDecorator(DATAKEYS.VIDEOS_KEYS);
-      getFieldDecorator(DATAKEYS.TAGS_KEYS);
-      getFieldDecorator(DATAKEYS.SHOW_TITLE);
-      getFieldDecorator(DATAKEYS.YEAR);
-      getFieldDecorator(DATAKEYS.TITLE);
-      getFieldDecorator(DATAKEYS.ABSTRACT);
-      getFieldDecorator(DATAKEYS.ACCEPTED_YEAR);
-      getFieldDecorator(DATAKEYS.DOI_LINK);
-      getFieldDecorator(DATAKEYS.PDF_LINK);
-      getFieldDecorator(DATAKEYS.PUBLICATIONON);
+      const setPair = {};
+      const delaySetPair = {}; // dynamic input data need to set ''after'' its component created.
 
-      setFieldsValue({
-        [DATAKEYS.IMGS]: data.imgs
-          ? data.imgs.map((imgInfo, idx) => ({
-              uuid: imgInfo.uuid,
-              file: {
-                uid: `img-${idx}`,
-                name: imgInfo.name,
-                status: 'done',
-                url: imgInfo.url
-              },
-              caption: imgInfo.caption
-            }))
-          : [],
-        [DATAKEYS.COVER]: data.cover
-          ? [
-              {
+      dataBindingConfs.forEach(({ key, withLocalKey, defaultValue }) => {
+        if (key === 'imgs') {
+          const value = data[key]
+            ? data[key].map((imgInfo, idx) => ({
+                uuid: imgInfo.uuid,
                 file: {
-                  uid: 'cover',
-                  name: data.cover[0].name,
+                  uid: `img-${idx}`,
+                  name: imgInfo.name,
                   status: 'done',
-                  url: data.cover[0].url
+                  url: imgInfo.url
                 },
-                caption: ''
-              }
-            ]
-          : [],
-        // Dynamic keys need to be set first, too.
-        [DATAKEYS.AUTHORS_KEYS]: data.authors
-          ? [...Array(data.authors.length)].map((_elem, idx) => idx)
-          : [0],
-        [DATAKEYS.VIDEOS_KEYS]: data.videos
-          ? [...Array(data.videos.length)].map((_elem, idx) => idx)
-          : [0],
-        [DATAKEYS.DESCRIPTIONS_KEYS]: data.descriptions
-          ? [...Array(data.descriptions.length)].map((_elem, idx) => idx)
-          : [0],
-        [DATAKEYS.TAGS_KEYS]: data.tags
-          ? [...Array(data.tags.length)].map((_elem, idx) => idx)
-          : [0],
-        [DATAKEYS.SHOW_TITLE]: data.showTitle,
-        [DATAKEYS.YEAR]: data.year,
-        [DATAKEYS.TITLE]: data.title,
-        [DATAKEYS.ABSTRACT]: data.abstract,
-        [DATAKEYS.ACCEPTED_YEAR]: data.acceptedYear,
-        [DATAKEYS.DOI_LINK]: data.doi,
-        [DATAKEYS.PUBLICATIONON]: data.publicationOn,
-        [DATAKEYS.PDF_LINK]: data.pdf
+                caption: imgInfo.caption
+              }))
+            : defaultValue;
+          setPair[key] = value;
+        } else if (key === 'cover') {
+          const value = data[key]
+            ? [
+                {
+                  file: {
+                    uid: 'cover',
+                    name: data.cover[0].name,
+                    status: 'done',
+                    url: data.cover[0].url
+                  },
+                  caption: ''
+                }
+              ]
+            : defaultValue;
+          setPair[key] = value;
+        } else if (withLocalKey) {
+          const idxValue = data[key]
+            ? [...Array(data[key].length)].map((elem, idx) => idx)
+            : [0];
+
+          setPair[`${key}-idx`] = idxValue;
+          delaySetPair[key] = data[key] ? data[key] : defaultValue;
+        } else {
+          setPair[key] = data[key] ? data[key] : defaultValue;
+        }
       });
 
-      // Set after component create.
-      setTimeout(() => {
-        setFieldsValue({
-          [DATAKEYS.AUTHORS]: data.authors,
-          [DATAKEYS.DESCRIPTIONS]: data.descriptions,
-          [DATAKEYS.TAGS]: data.tags,
-          [DATAKEYS.VIDEOS]: data.videos
-        });
-      }, 0);
+      setFieldsValue(setPair);
+      setTimeout(() => setFieldsValue(delaySetPair), 0);
     },
-    [setFieldsValue, getFieldDecorator]
+    [setFieldsValue]
   );
 
   const handleSubmit = useCallback(
@@ -215,7 +200,7 @@ const ProjectForm = ({ form, match, history }) => {
         console.log('PROJECT ON SUBMIT ERROR:', err);
       });
     },
-    [validateFields, match.params.uuid]
+    [validateFields, match.params.uuid, history]
   );
 
   useEffect(() => {
@@ -230,6 +215,8 @@ const ProjectForm = ({ form, match, history }) => {
       setIsLoading(false);
     };
 
+    createDataBinder();
+
     if (match.params.uuid) {
       fetchData(match.params.uuid);
     } else {
@@ -239,7 +226,7 @@ const ProjectForm = ({ form, match, history }) => {
     setIsLoading,
     setData,
     setInitFormValue,
-    getFieldDecorator,
+    createDataBinder,
     match.params.uuid
   ]);
 
@@ -258,7 +245,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Show title">
         <Input
-          dataKey={DATAKEYS.SHOW_TITLE}
+          dataKey={dataBindingKeys.showTitle}
           validationRules={[
             {
               required: true,
@@ -271,7 +258,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Title">
         <Input
-          dataKey={DATAKEYS.TITLE}
+          dataKey={dataBindingKeys.title}
           validationRules={[
             {
               required: true,
@@ -283,7 +270,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Year">
         <Input
-          dataKey={DATAKEYS.YEAR}
+          dataKey={dataBindingKeys.year}
           validationRules={[
             {
               validator: (_rule, value) => !isNaN(value),
@@ -299,7 +286,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Authors">
         <DynamicInput
-          dataKey={DATAKEYS.AUTHORS}
+          dataKey={dataBindingKeys.authors}
           validationRules={[
             {
               required: true,
@@ -313,21 +300,17 @@ const ProjectForm = ({ form, match, history }) => {
       <Form.Item label="Cover">
         <ImgUploader
           title="Cover"
-          dataKey={DATAKEYS.COVER}
+          dataKey={dataBindingKeys.cover}
           isSingleImg
           {...form}
         />
       </Form.Item>
       <Form.Item label="Images">
-        <ImgUploader
-          dataKey={DATAKEYS.IMGS}
-          withCaption
-          {...form}
-        />
+        <ImgUploader dataKey={dataBindingKeys.imgs} withCaption {...form} />
       </Form.Item>
-      <Form.Item label="Videos">
+      <Form.Item label="Video links">
         <DynamicInput
-          dataKey={DATAKEYS.VIDEOS}
+          dataKey={dataBindingKeys.videos}
           validationRules={[
             {
               type: 'url',
@@ -339,7 +322,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Abstract">
         <TextArea
-          dataKey={DATAKEYS.ABSTRACT}
+          dataKey={dataBindingKeys.abstract}
           validationRules={[
             {
               required: true,
@@ -351,7 +334,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="Descriptions">
         <DynamicInput
-          dataKey={DATAKEYS.DESCRIPTIONS}
+          dataKey={dataBindingKeys.descriptions}
           validationRules={[
             {
               required: true,
@@ -364,14 +347,14 @@ const ProjectForm = ({ form, match, history }) => {
         />
       </Form.Item>
       <Form.Item label="Tags">
-        <DynamicInput dataKey={DATAKEYS.TAGS} {...form} />
+        <DynamicInput dataKey={dataBindingKeys.tags} {...form} />
       </Form.Item>
       <Form.Item label="Publication on">
-        <Input dataKey={DATAKEYS.PUBLICATIONON} {...form} />
+        <Input dataKey={dataBindingKeys.publicationOn} {...form} />
       </Form.Item>
       <Form.Item label="Accepted year">
         <Input
-          dataKey={DATAKEYS.ACCEPTED_YEAR}
+          dataKey={dataBindingKeys.acceptedYear}
           validationRules={[
             {
               validator: (_rule, value) => !isNaN(value),
@@ -383,7 +366,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="PDF link">
         <Input
-          dataKey={DATAKEYS.PDF_LINK}
+          dataKey={dataBindingKeys.pdf}
           validationRules={[
             {
               type: 'url',
@@ -395,7 +378,7 @@ const ProjectForm = ({ form, match, history }) => {
       </Form.Item>
       <Form.Item label="DOI link">
         <Input
-          dataKey={DATAKEYS.DOI_LINK}
+          dataKey={dataBindingKeys.doi}
           validationRules={[
             {
               type: 'url',

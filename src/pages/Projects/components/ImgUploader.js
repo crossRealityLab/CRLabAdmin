@@ -149,9 +149,9 @@ export default ({
           : uploadButton}
       </Upload>
       {withCaption &&
-        getFieldValue(dataKey).map(elem => (
+        getFieldValue(dataKey).map((elem, idx) => (
           <Input
-            key={elem.file.name}
+            key={`${elem.file.name}-${idx}`}
             value={elem.caption}
             onChange={handleCaptionInput(elem.uuid)}
           />

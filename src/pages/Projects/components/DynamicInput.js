@@ -9,27 +9,27 @@ export default ({
   validationRules = [],
   isTextArea = false
 }) => {
-  getFieldDecorator(`${dataKey}-keys`, { initialValue: [0] });
-  const keys = getFieldValue(`${dataKey}-keys`);
+  getFieldDecorator(`${dataKey}-idx`, { initialValue: [0] });
+  const keys = getFieldValue(`${dataKey}-idx`);
   const currentId = useRef(keys.length);
 
   const remove = k => {
     // can use data-binding to get
-    const keys = getFieldValue(`${dataKey}-keys`);
+    const keys = getFieldValue(`${dataKey}-idx`);
     // We need at least one passenger
     if (keys.length === 1) {
       return;
     }
     // can use data-binding to set
     setFieldsValue({
-      [`${dataKey}-keys`]: keys.filter(key => key !== k)
+      [`${dataKey}-idx`]: keys.filter(key => key !== k)
     });
   };
 
   const add = () => {
-    const keys = getFieldValue(`${dataKey}-keys`);
+    const keys = getFieldValue(`${dataKey}-idx`);
     setFieldsValue({
-      [`${dataKey}-keys`]: [...keys, currentId.current]
+      [`${dataKey}-idx`]: [...keys, currentId.current]
     });
 
     currentId.current = currentId.current + 1;
