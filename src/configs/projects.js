@@ -13,7 +13,7 @@ export const dataBindingConfs = [
   },
   {
     key: 'year',
-    defaultValue: 0
+    defaultValue: '',
   },
   {
     key: 'authors',
@@ -49,7 +49,7 @@ export const dataBindingConfs = [
   },
   {
     key: 'acceptedYear',
-    defaultValue: 0
+    defaultValue: '',
   },
   {
     key: 'publicationOn',

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Spin, Icon, notification } from 'antd';
 import styled from 'styled-components';
-import _ from 'loadsh';
 import uuidV4 from 'uuid/v4';
 
 import DynamicInput from './components/DynamicInput';
@@ -38,70 +37,42 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-// Local data spec.
-const DATAKEYS = {
-  SHOW_TITLE: 'showTitle',
-  TITLE: 'title',
-  YEAR: 'year',
-  AUTHORS: 'authors',
-  AUTHORS_KEYS: 'authors-keys',
-  ABSTRACT: 'abstract',
-  COVER: 'cover',
-  IMGS: 'imgs',
-  VIDEOS: 'videos',
-  VIDEOS_KEYS: 'videos-keys',
-  DESCRIPTIONS: 'descriptions',
-  DESCRIPTIONS_KEYS: 'descriptions-keys',
-  TAGS: 'tags',
-  TAGS_KEYS: 'tags-keys',
-  PUBLICATIONON: 'publicationOn',
-  ACCEPTED_YEAR: 'acceptedYear',
-  PDF_LINK: 'pdf',
-  DOI_LINK: 'doi'
+const prepareUploadedData = data => {
+  const result = {};
+
+  dataBindingConfs.forEach(({ key, withLocalKey }) => {
+    if (key === 'imgs') {
+      result[key] = data[key].map(elem => ({
+        name: elem.file.name,
+        url: elem.file.url,
+        caption: elem.caption
+      }));
+    } else if (key === 'cover') {
+      result[key] = data[key].map(elem => ({
+        name: elem.file.name,
+        url: elem.file.url
+      }));
+    } else if (withLocalKey) {
+      result[key] = data[key].filter(elem => !!elem);
+    } else {
+      result[key] = data[key] ? data[key] : '';
+    }
+  });
+
+  return result;
 };
 
 const uploadData = async (data, uuid = '') => {
-  const result = _.omit(data, [
-    DATAKEYS.AUTHORS_KEYS,
-    DATAKEYS.VIDEOS_KEYS,
-    DATAKEYS.DESCRIPTIONS_KEYS,
-    DATAKEYS.TAGS_KEYS,
-    DATAKEYS.AUTHORS,
-    DATAKEYS.VIDEOS,
-    DATAKEYS.DESCRIPTIONS,
-    DATAKEYS.TAGS,
-    DATAKEYS.IMGS,
-    DATAKEYS.COVER
-  ]);
-
-  result.imgs = data[DATAKEYS.IMGS].map(elem => ({
-    name: elem.file.name,
-    url: elem.file.url,
-    caption: elem.caption
-  }));
-
-  result.cover = data[DATAKEYS.COVER].map(elem => ({
-    name: elem.file.name,
-    url: elem.file.url
-  }));
-
-  result[DATAKEYS.AUTHORS] = data[DATAKEYS.AUTHORS].filter(elem => !!elem);
-  result[DATAKEYS.VIDEOS] = data[DATAKEYS.VIDEOS].filter(elem => !!elem);
-  result[DATAKEYS.DESCRIPTIONS] = data[DATAKEYS.DESCRIPTIONS].filter(
-    elem => !!elem
-  );
-  result[DATAKEYS.TAGS] = data[DATAKEYS.TAGS].filter(elem => !!elem);
-
   try {
     if (uuid) {
-      result.uuid = uuid;
-      result.timestamp = Date.now();
-      await update(uuid, result);
+      data.uuid = uuid;
+      data.timestamp = Date.now();
+      await update(uuid, data);
     } else {
-      result.uuid = uuidV4();
-      result.createdTimestamp = Date.now();
-      result.timestamp = result.createdTimestamp;
-      await create(result.uuid, result);
+      data.uuid = uuidV4();
+      data.createdTimestamp = Date.now();
+      data.timestamp = data.createdTimestamp;
+      await create(data.uuid, data);
     }
   } catch (e) {
     throw e;
@@ -184,7 +155,9 @@ const ProjectForm = ({ form, match, history }) => {
         if (!err) {
           console.log('Received values of form: ', data);
           try {
-            await uploadData(data, match.params.uuid);
+            const preparedData = prepareUploadedData(data);
+            await uploadData(preparedData, match.params.uuid);
+
             notification.success({
               message: `Create/Edit ${data.title} complete!`,
               duration: 4
@@ -196,8 +169,9 @@ const ProjectForm = ({ form, match, history }) => {
               duration: 2
             });
           }
+        } else {
+          console.log('PROJECT ON SUBMIT ERROR:', err);
         }
-        console.log('PROJECT ON SUBMIT ERROR:', err);
       });
     },
     [validateFields, match.params.uuid, history]
@@ -206,8 +180,8 @@ const ProjectForm = ({ form, match, history }) => {
   useEffect(() => {
     const fetchData = async uuid => {
       setIsLoading(true);
-      const data = await fakeAPI();
-      // const data = await get(uuid);
+      // const data = await fakeAPI();
+      const data = await get(uuid);
       if (data) {
         setData(data);
         setInitFormValue(data);
@@ -273,7 +247,7 @@ const ProjectForm = ({ form, match, history }) => {
           dataKey={dataBindingKeys.year}
           validationRules={[
             {
-              validator: (_rule, value) => !isNaN(value),
+              validator: (rule, value) => !isNaN(value),
               message: 'The input must be a number.'
             },
             {
@@ -357,7 +331,7 @@ const ProjectForm = ({ form, match, history }) => {
           dataKey={dataBindingKeys.acceptedYear}
           validationRules={[
             {
-              validator: (_rule, value) => !isNaN(value),
+              validator: (rule, value) =>  value === undefined || !isNaN(value),
               message: 'Input must be a number.'
             }
           ]}
