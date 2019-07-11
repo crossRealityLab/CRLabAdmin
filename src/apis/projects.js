@@ -7,11 +7,13 @@ const db = firebase.database();
 const storage = firebase.storage();
 
 export const create = (uuid, data) => {
-  console.log(`create: ${uuid}`);
-  db.ref(`/projects/${uuid}`)
+  return db.ref(`/projects/${uuid}`)
     .set(data)
     .then(() => console.log(`CREATE PROJECT ${uuid} COMPLETE`))
-    .catch(e => console.error(`CREATE PROJECT ${uuid} ERROR: ${e}`));
+    .catch(e => {
+      console.error(`CREATE PROJECT ${uuid} ERROR: ${e}`);
+      throw e;
+    });
 };
 
 export const getAll = () => {
@@ -20,7 +22,10 @@ export const getAll = () => {
     .orderByChild('timestamp')
     .once('value')
     .then(data => data.val())
-    .catch(e => console.error('GET ALL PROJECT ERROR', e));
+    .catch(e => {
+      console.error('GET ALL PROJECT ERROR', e);
+      throw e;
+    });
 };
 
 export const get = uuid => {
@@ -28,21 +33,30 @@ export const get = uuid => {
     .ref(`/projects/${uuid}`)
     .once('value')
     .then(data => data.val())
-    .catch(e => console.error(`GET PROJECT ${uuid} ERROR: ${e}`));
+    .catch(e => {
+      console.error(`GET PROJECT ${uuid} ERROR: ${e}`);
+      throw e;
+    });
 };
 
 export const update = (uuid, data) => {
-  db.ref(`/projects/${uuid}`)
+  return db.ref(`/projects/${uuid}`)
     .update(data)
     .then(() => console.log(`UPDATE PROJECT ${uuid} COMPLETE`))
-    .catch(e => console.error(`UPDATE PROJECT ${uuid} ERROR: ${e}`));
+    .catch(e => {
+      console.error(`UPDATE PROJECT ${uuid} ERROR: ${e}`);
+      throw e;
+    });
 };
 
 export const remove = uuid => {
   return db.ref(`/projects/${uuid}`)
     .remove()
     .then(() => console.log(`REMOVE PROJECT ${uuid} COMPLETE`))
-    .catch(e => console.error(`REMOVE PROJECT ${uuid} ERROR: ${e}`));
+    .catch(e => {
+      console.error(`REMOVE PROJECT ${uuid} ERROR: ${e}`);
+      throw e;
+    });
 };
 
 export const uploadImg = async (imageName, file) => {
@@ -63,13 +77,11 @@ export const removeImg = async imageName => {
   const storageRef = await storage.ref();
   const imgFile = storageRef.child(`projects/${imageName}`);
   // Delete the file
-  imgFile
+  return imgFile
     .delete()
-    .then(() => {
-      // File deleted successfully
-      console.log(`PROJECT DELETE FILE ${imageName} FROM SERVER COMPLETE`);
-    })
-    .catch((error) => {
-      console.log(`PROJECT DELETE FILE ${imageName} FROM SERVER ERROR: ${error}`);
+    .then(() => console.log(`PROJECT DELETE FILE ${imageName} FROM SERVER COMPLETE`))
+    .catch(e => {
+      console.log(`PROJECT DELETE FILE ${imageName} FROM SERVER ERROR: ${e}`);
+      throw e;
     });
 };

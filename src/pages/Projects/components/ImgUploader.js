@@ -21,6 +21,7 @@ export default ({
   const customUpload = async ({ onError, onSuccess, file }) => {
     try {
       const fileName = file.name;
+      // 拖曳後即上傳，即使沒有 submit 出去。
       const { image, imageURL } = await uploadImg(fileName, file);
       /**
        * Why ...file will miss file.name ???
@@ -124,7 +125,8 @@ export default ({
     });
 
     // remove from server if it's on server.
-    removeImg(file.name);
+    // * 討論後決定不刪除，由於可能被其他文章 reference, 不隨意刪除 DB 上的圖片資料較為保險
+    // removeImg(file.name);
   };
 
   const getImgList = () => {

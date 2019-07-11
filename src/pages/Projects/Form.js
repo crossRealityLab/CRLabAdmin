@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Form, Input, Button, Spin, Icon } from 'antd';
+import { Link } from 'react-router-dom';
+import { Form, Input, Button, Spin, Icon, notification } from 'antd';
 import styled from 'styled-components';
 import _ from 'loadsh';
 import uuidV4 from 'uuid/v4';
@@ -15,6 +16,15 @@ const LoadingIcon = styled(Icon)`
   left: 50%;
   top: 50%;
   font-size: 24;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  margin: 40px 0 0 40px;
+
+  > * {
+    margin: 0 5px;
+  }
 `;
 
 // Local data spec.
@@ -46,7 +56,7 @@ const fakeAPI = () => {
   });
 };
 
-const uploadData = (data, uuid = '') => {
+const uploadData = async (data, uuid = '') => {
   const result = _.omit(data, [
     DATAKEYS.AUTHORS_KEYS,
     DATAKEYS.VIDEOS_KEYS,
@@ -76,20 +86,23 @@ const uploadData = (data, uuid = '') => {
   result[DATAKEYS.DESCRIPTIONS] = data[DATAKEYS.DESCRIPTIONS].filter(elem => !!elem);
   result[DATAKEYS.TAGS] = data[DATAKEYS.TAGS].filter(elem => !!elem);
 
-
-  if (uuid) {
-    result.uuid = uuid;
-    result.timestamp = Date.now();
-    return update(uuid, result);
+  try {
+    if (uuid) {
+      result.uuid = uuid;
+      result.timestamp = Date.now();
+      await update(uuid, result);
+    } else {
+      result.uuid = uuidV4();
+      result.createdTimestamp = Date.now();
+      result.timestamp = result.createdTimestamp;
+      await create(result.uuid, result);
+    }
+  } catch (e) {
+    throw e;
   }
-
-  result.uuid = uuidV4();
-  result.createdTimestamp = Date.now();
-  result.timestamp = result.createdTimestamp;
-  create(result.uuid, result);
 };
 
-const ProjectForm = ({ form, match }) => {
+const ProjectForm = ({ form, match, history }) => {
   const { validateFields, getFieldDecorator, setFieldsValue } = form;
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
@@ -127,18 +140,18 @@ const ProjectForm = ({ form, match }) => {
           }
         ]: [],
         // Dynamic keys need to be set first, too.
-        [DATAKEYS.AUTHORS_KEYS]: [...Array(data.authors.length)].map(
+        [DATAKEYS.AUTHORS_KEYS]:  data.authors ? [...Array(data.authors.length)].map(
           (_elem, idx) => idx
-        ),
-        [DATAKEYS.VIDEOS_KEYS]: [...Array(data.videos.length)].map(
+        ) : [0],
+        [DATAKEYS.VIDEOS_KEYS]: data.videos ? [...Array(data.videos.length)].map(
           (_elem, idx) => idx
-        ),
-        [DATAKEYS.DESCRIPTIONS_KEYS]: [...Array(data.descriptions.length)].map(
+        ): [0],
+        [DATAKEYS.DESCRIPTIONS_KEYS]: data.descriptions ? [...Array(data.descriptions.length)].map(
           (_elem, idx) => idx
-        ),
-        [DATAKEYS.TAGS_KEYS]: [...Array(data.tags.length)].map(
+        ): [0],
+        [DATAKEYS.TAGS_KEYS]: data.tags ? [...Array(data.tags.length)].map(
           (_elem, idx) => idx
-        )
+        ): [0]
       });
 
       // Set after component create.
@@ -165,10 +178,22 @@ const ProjectForm = ({ form, match }) => {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      validateFields((err, data) => {
+      validateFields(async (err, data) => {
         if (!err) {
           console.log('Received values of form: ', data);
-          return uploadData(data, match.params.uuid);
+          try {
+            await uploadData(data, match.params.uuid);
+            notification.success({
+              message: `Create/Edit ${data.title} complete!`,
+              duration: 4,
+            });
+            history.push(`/0/list`);
+          } catch (e) {
+            notification.error({
+              message: `Create ${data.title} error!`,
+              duration: 2,
+            });
+          }       
         } 
         console.log('PROJECT ON SUBMIT ERROR:', err);
       });
@@ -341,9 +366,16 @@ const ProjectForm = ({ form, match }) => {
           ]
         })(<Input />)}
       </Form.Item>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
+      <ButtonWrapper>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+        <Link to="/0/list">
+          <Button type="danger">
+            Back
+          </Button>
+        </Link>
+      </ButtonWrapper>
     </Form>
   );
 };
