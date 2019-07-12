@@ -5,9 +5,6 @@ import { Table, Divider, Tag, Button, Popconfirm, notification } from 'antd';
 import _ from 'lodash';
 
 import { getAll, remove } from '../../apis/projects';
-import { getMockProjects } from '../../mockdata';
-
-const data = getMockProjects(20);
 
 export default () => {
   const [list, setList] = useState([]);
@@ -80,7 +77,7 @@ export default () => {
   const renderAction = useCallback(
     (text, record) => (
       <span>
-        <Link to={`/0/${record.uuid}/edit`}>Edit</Link>
+        <Link to={`/projects/${record.uuid}/edit`}>Edit</Link>
         <Divider type="vertical" />
         <Popconfirm
           title="Are you sure to delete ?"
@@ -97,13 +94,11 @@ export default () => {
 
   return (
     <>
-      <Link to="/0/create">
+      <Link to="/projects/create">
         <Button 
           type="primary"
           style={{
-            float: 'right',
-            zIndex: '1',
-            marginRight: '15px',
+            marginLeft: '15px',
             marginBottom: '15px',
           }}
         >

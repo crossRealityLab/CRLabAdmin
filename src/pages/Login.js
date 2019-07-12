@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
-import { Form, Icon, Button } from 'antd';
+import { Form, Icon, Button, notification } from 'antd';
 
 import firebase from '../firebase';
 import { AuthContext } from '../providers/Auth';
@@ -33,10 +33,18 @@ const Login = ({ history, form }) => {
             await firebase.auth().signInWithEmailAndPassword(account, password);
             history.push('/');
           } catch (error) {
-            alert(error);
+            notification.error({
+              message: `Auth to server error`,
+              description: `${error}`,
+              duration: 2
+            });
           }
         } else {
-          console.error(err);
+          notification.error({
+            message: `Auth form error from client`,
+            description: `${err}`,
+            duration: 2
+          });
         }
       });
     },
@@ -57,8 +65,8 @@ const Login = ({ history, form }) => {
           <Input
             dataKey="account"
             validationRules={[
-              { required: true, message: 'Please input your account!' },
-              { type: 'email', message: 'Account should be an email!' }
+              { required: true, message: 'Please input your account.' },
+              { type: 'email', message: 'Account should be an email.' }
             ]}
             inputProps={{
               prefix: <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />,
@@ -71,7 +79,7 @@ const Login = ({ history, form }) => {
           <Input
             dataKey="password"
             validationRules={[
-              { required: true, message: 'Please input your password!' }
+              { required: true, message: 'Please input your password.' }
             ]}
             inputProps={{
               prefix: <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />,

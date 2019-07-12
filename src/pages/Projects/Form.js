@@ -4,22 +4,13 @@ import { Form, Button, Spin, Icon, notification } from 'antd';
 import styled from 'styled-components';
 import uuidV4 from 'uuid/v4';
 
-import DynamicInput from './components/DynamicInput';
-import ImgUploader from './components/ImgUploader';
+import DynamicInput from '../../components/DynamicInput';
+import ImgUploader from '../../components/ImgUploader';
 import Input from '../../components/Input';
-import TextArea from './components/TextArea';
+import TextArea from '../../components/TextArea';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/projects';
 import { create, get, update } from '../../apis/projects';
-
-import { getMockProjects } from '../../mockdata';
-
-const fakeAPI = () => {
-  const mockdata = getMockProjects(2)[1];
-  return new Promise(resolve => {
-    setTimeout(() => resolve(mockdata), 2000);
-  });
-};
 
 /**
  * Fucking antd, validating msg only show when input is the child of Form.Item,
@@ -170,10 +161,12 @@ const ProjectForm = ({ form, match, history }) => {
               message: `Create/Edit ${data.title} complete!`,
               duration: 4
             });
-            history.push(`/0/list`);
+            history.push(`/projects/list`);
           } catch (e) {
+            console.error(e);
             notification.error({
               message: `Create ${data.title} error!`,
+              description: `${e}`,
               duration: 2
             });
           }
@@ -374,7 +367,7 @@ const ProjectForm = ({ form, match, history }) => {
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-        <Link to="/0/list">
+        <Link to="/projects/list">
           <Button type="danger">Back</Button>
         </Link>
       </ButtonWrapper>

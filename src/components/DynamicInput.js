@@ -11,16 +11,15 @@ export default ({
 }) => {
   getFieldDecorator(`${dataKey}-idx`, { initialValue: [0] });
   const keys = getFieldValue(`${dataKey}-idx`);
+
   const currentId = useRef(keys.length);
 
-  const remove = k => {
-    // can use data-binding to get
+  const remove = k => () => {
     const keys = getFieldValue(`${dataKey}-idx`);
-    // We need at least one passenger
     if (keys.length === 1) {
       return;
     }
-    // can use data-binding to set
+
     setFieldsValue({
       [`${dataKey}-idx`]: keys.filter(key => key !== k)
     });
@@ -40,7 +39,6 @@ export default ({
       {keys.map(k => (
         <Form.Item
           style={{ width: '150%', marginBottom: '-20px' }}
-          required={false}
           key={k}
           wrapperCol={{ span: 20 }}
         >
@@ -55,16 +53,18 @@ export default ({
           )}
           {keys.length > 1 ? (
             <Icon
-              className="dynamic-delete-button"
               type="minus-circle-o"
-              onClick={() => remove(k)}
+              onClick={remove(k)}
               style={{ marginLeft: '10px' }}
             />
           ) : null}
         </Form.Item>
       ))}
-      <Form.Item wrapperCol={{ span: 12, offset: 2 }} style={{ marginBottom: 'unset' }}>
-        <Button type="dashed" onClick={add} style={{ width: '60%'}}>
+      <Form.Item
+        wrapperCol={{ span: 12, offset: 2 }}
+        style={{ marginBottom: 'unset' }}
+      >
+        <Button type="dashed" onClick={add} style={{ width: '60%' }}>
           <Icon type="plus" /> Add field
         </Button>
       </Form.Item>

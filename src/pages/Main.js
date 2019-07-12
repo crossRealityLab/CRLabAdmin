@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { NavLink, Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { Layout, Menu, Icon } from 'antd';
+import { NavLink, Switch, Route, Redirect } from 'react-router-dom';
+import { Layout, Menu, Icon, Button } from 'antd';
 
 import firebase from '../firebase';
 import Logo from '../components/Logo';
@@ -17,41 +17,46 @@ const Link = styled(NavLink)`
   }
 `;
 
-function App() {
+export default () => {
+  const signOut = useCallback(() => {
+    firebase.auth().signOut();
+  }, []);
+
   return (
     <Layout style={{ minWidth: '100vw', minHeight: '100vh' }}>
       <Sider breakpoint="lg" collapsedWidth="0">
         <Logo>Cross Reality Lab</Logo>
         <Menu theme="dark" mode="inline" selectedKeys={[]}>
           <Menu.Item key="1">
-            <Link to="/0" activeClassName="active">
-              <Icon type="user" />
+            <Link to="/projects" activeClassName="active">
+              <Icon type="project" />
               <span>Projects</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link to="/1" activeClassName="active">
-              <Icon type="video-camera" />
+            <Link to="/members" activeClassName="active">
+              <Icon type="user" />
               <span>Members</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="3">
-            <Link to="/2" activeClassName="active">
-              <Icon type="upload" />
+            <Link to="/news" activeClassName="active">
+              <Icon type="alert" />
               <span>News</span>
             </Link>
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: 0 }} />
-        <button onClick={() => firebase.auth().signOut()}>Sign out</button>
+        <Header style={{ background: '#fff', padding: '0 20px', textAlign: 'end' }}>
+          <Button type="danger" onClick={signOut}>Sign out</Button>
+        </Header>
         <Content style={{ margin: '24px 16px 0' }}>
           <Switch>
-            <Route path="/0" component={Projects} />
-            <Route path="/1" component={Members} />
-            <Route path="/2" component={News} />
-            <Redirect to="/0" />
+            <Route path="/projects" component={Projects} />
+            <Route path="/members" component={Members} />
+            <Route path="/news" component={News} />
+            <Redirect to="/projects" />
           </Switch>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
@@ -60,6 +65,4 @@ function App() {
       </Layout>
     </Layout>
   );
-}
-
-export default withRouter(App);
+};
