@@ -3,5 +3,6 @@ import { Input } from 'antd';
 
 export default ({ dataKey, validationRules = [], getFieldDecorator }) =>
   getFieldDecorator(dataKey, {
-    rules: validationRules
+    rules: validationRules,
+    validateTrigger: ['onBlur', 'onChange'],
   })(<Input />);

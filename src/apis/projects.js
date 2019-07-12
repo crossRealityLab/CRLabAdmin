@@ -1,7 +1,4 @@
-import firebase from 'firebase';
-import env from '../env';
-
-firebase.initializeApp(env);
+import firebase from '../firebase';
 
 const db = firebase.database();
 const storage = firebase.storage();

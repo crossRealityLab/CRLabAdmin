@@ -40,7 +40,7 @@ export default () => {
     } catch (e) {
       notification.error({
         message: `Remove Error!`,
-        description: e,
+        description: `${e}`,
         duration: 4,
       });
     } finally {

@@ -6,7 +6,7 @@ import uuidV4 from 'uuid/v4';
 
 import DynamicInput from './components/DynamicInput';
 import ImgUploader from './components/ImgUploader';
-import Input from './components/Input';
+import Input from '../../components/Input';
 import TextArea from './components/TextArea';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/projects';
@@ -20,6 +20,14 @@ const fakeAPI = () => {
     setTimeout(() => resolve(mockdata), 2000);
   });
 };
+
+/**
+ * Fucking antd, validating msg only show when input is the child of Form.Item,
+ * so in normal Input, I mannually add Form.Item as wrapper.
+ */
+const StyledFromItem = styled(Form.Item)`
+  margin-bottom: 0;
+`;
 
 const LoadingIcon = styled(Icon)`
   position: absolute;
@@ -217,7 +225,7 @@ const ProjectForm = ({ form, match, history }) => {
       <Form.Item label="UUID">
         {data.uuid ? <strong>{data.uuid}</strong> : ''}
       </Form.Item>
-      <Form.Item label="Show title">
+      <StyledFromItem label="Show title">
         <Input
           dataKey={dataBindingKeys.showTitle}
           validationRules={[
@@ -229,8 +237,8 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
-      <Form.Item label="Title">
+      </StyledFromItem>
+      <StyledFromItem label="Title">
         <Input
           dataKey={dataBindingKeys.title}
           validationRules={[
@@ -241,8 +249,8 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
-      <Form.Item label="Year">
+      </StyledFromItem>
+      <StyledFromItem label="Year">
         <Input
           dataKey={dataBindingKeys.year}
           validationRules={[
@@ -257,7 +265,7 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
+      </StyledFromItem>
       <Form.Item label="Authors">
         <DynamicInput
           dataKey={dataBindingKeys.authors}
@@ -294,7 +302,7 @@ const ProjectForm = ({ form, match, history }) => {
           {...form}
         />
       </Form.Item>
-      <Form.Item label="Abstract">
+      <StyledFromItem label="Abstract">
         <TextArea
           dataKey={dataBindingKeys.abstract}
           validationRules={[
@@ -305,7 +313,7 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
+      </StyledFromItem>
       <Form.Item label="Descriptions">
         <DynamicInput
           dataKey={dataBindingKeys.descriptions}
@@ -323,10 +331,10 @@ const ProjectForm = ({ form, match, history }) => {
       <Form.Item label="Tags">
         <DynamicInput dataKey={dataBindingKeys.tags} {...form} />
       </Form.Item>
-      <Form.Item label="Publication on">
+      <StyledFromItem label="Publication on">
         <Input dataKey={dataBindingKeys.publicationOn} {...form} />
-      </Form.Item>
-      <Form.Item label="Accepted year">
+      </StyledFromItem>
+      <StyledFromItem label="Accepted year">
         <Input
           dataKey={dataBindingKeys.acceptedYear}
           validationRules={[
@@ -337,8 +345,8 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
-      <Form.Item label="PDF link">
+      </StyledFromItem>
+      <StyledFromItem label="PDF link">
         <Input
           dataKey={dataBindingKeys.pdf}
           validationRules={[
@@ -349,8 +357,8 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
-      <Form.Item label="DOI link">
+      </StyledFromItem>
+      <StyledFromItem label="DOI link">
         <Input
           dataKey={dataBindingKeys.doi}
           validationRules={[
@@ -361,7 +369,7 @@ const ProjectForm = ({ form, match, history }) => {
           ]}
           {...form}
         />
-      </Form.Item>
+      </StyledFromItem>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
           Submit
