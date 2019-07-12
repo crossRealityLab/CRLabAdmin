@@ -32,13 +32,13 @@ export default () => {
       setList(preList => preList.filter(elem => elem.uuid !== uuid));
       notification.success({
         message: `Remove Complete!`,
-        duration: 4,
+        duration: 4
       });
     } catch (e) {
       notification.error({
         message: `Remove Error!`,
         description: `${e}`,
-        duration: 4,
+        duration: 4
       });
     } finally {
       setIsLoading(false);
@@ -46,23 +46,16 @@ export default () => {
   };
 
   const renderTags = useCallback(
-    tags => (
-      tags && <span>
-        {tags.map(tag => {
-          let color = 'green';
-          if (tag === 'CHI') {
-            color = 'volcano';
-          } else if (tag === 'UIST') {
-            color = 'geekblue';
-          }
-          return (
-            <Tag color={color} key={tag}>
+    tags =>
+      tags && (
+        <span>
+          {tags.map(tag => (
+            <Tag color="volcano" key={tag}>
               {tag.toUpperCase()}
             </Tag>
-          );
-        })}
-      </span>
-    ),
+          ))}
+        </span>
+      ),
     []
   );
 
@@ -95,11 +88,11 @@ export default () => {
   return (
     <>
       <Link to="/projects/create">
-        <Button 
+        <Button
           type="primary"
           style={{
             marginLeft: '15px',
-            marginBottom: '15px',
+            marginBottom: '15px'
           }}
         >
           Create

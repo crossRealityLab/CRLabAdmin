@@ -35,6 +35,7 @@ export default ({
    *  }[];
    */
   getFieldDecorator(dataKey, { initialValue: [] });
+  console.log('d:', getFieldValue(dataKey));
 
   const [previewStatus, setPreviewStatus] = useState({
     previewVisible: false,
@@ -104,12 +105,12 @@ export default ({
     return true;
   }, []);
 
-  const handleCaptionInput = uuid => e => {
+  const handleCaptionInput = uid => e => {
     const preData = getFieldValue(dataKey);
     const newData = preData.map(elem => {
-      if (elem.uuid === uuid) {
+      if (elem.file.uid === uid) {
         return {
-          uuid,
+          uid,
           file: elem.file,
           caption: e.target.value
         };
@@ -167,7 +168,7 @@ export default ({
           <Input
             key={`${elem.file.name}-${idx}`}
             value={elem.caption}
-            onChange={handleCaptionInput(elem.uuid)}
+            onChange={handleCaptionInput(elem.file.uid)}
           />
         ))}
       <Modal

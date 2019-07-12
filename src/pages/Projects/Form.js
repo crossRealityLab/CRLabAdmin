@@ -103,7 +103,6 @@ const ProjectForm = ({ form, match, history }) => {
         if (key === 'imgs') {
           const value = data[key]
             ? data[key].map((imgInfo, idx) => ({
-                uuid: imgInfo.uuid,
                 file: {
                   uid: `img-${idx}`,
                   name: imgInfo.name,
