@@ -39,12 +39,6 @@ const Login = ({ history, form }) => {
               duration: 2
             });
           }
-        } else {
-          notification.error({
-            message: `Auth form error from client`,
-            description: `${err}`,
-            duration: 2
-          });
         }
       });
     },
