@@ -5,7 +5,7 @@ import { Form, Icon, Button, notification } from 'antd';
 
 import firebase from '../firebase';
 import { AuthContext } from '../providers/Auth';
-import Input from '../components/Input';
+import { InputItem, Field } from '../components/Input';
 
 const MiddlizeWrapper = styled.div`
   width: 100%;
@@ -16,10 +16,6 @@ const MiddlizeWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: #eee;
-`;
-
-const StyledFromItem = styled(Form.Item)`
-  margin-bottom: 0;
 `;
 
 const Login = ({ history, form }) => {
@@ -55,8 +51,8 @@ const Login = ({ history, form }) => {
     <MiddlizeWrapper>
       <h1>CR Lab</h1>
       <Form onSubmit={handleLogin}>
-        <StyledFromItem>
-          <Input
+        <InputItem>
+          <Field
             dataKey="account"
             validationRules={[
               { required: true, message: 'Please input your account.' },
@@ -68,9 +64,9 @@ const Login = ({ history, form }) => {
             }}
             {...form}
           />
-        </StyledFromItem>
-        <StyledFromItem>
-          <Input
+        </InputItem>
+        <InputItem>
+          <Field
             dataKey="password"
             validationRules={[
               { required: true, message: 'Please input your password.' }
@@ -82,7 +78,7 @@ const Login = ({ history, form }) => {
             }}
             {...form}
           />
-        </StyledFromItem>
+        </InputItem>
         <Button htmlType="submit" style={{ float: 'right' }}>
           Log in
         </Button>

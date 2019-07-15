@@ -35,7 +35,6 @@ export default ({
    *  }[];
    */
   getFieldDecorator(dataKey, { initialValue: [] });
-  console.log('d:', getFieldValue(dataKey));
 
   const [previewStatus, setPreviewStatus] = useState({
     previewVisible: false,
