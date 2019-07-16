@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Form, Input, Button, Icon } from 'antd';
 
 export default ({
@@ -6,9 +6,11 @@ export default ({
   getFieldDecorator,
   getFieldValue,
   setFieldsValue,
-  fields = [],
+  fields = []
 }) => {
-  getFieldDecorator(`${dataKey}-idx`, { initialValue: [0] });
+  const [hasInitLoad, setHasInitLoad] = useState(false);
+
+  getFieldDecorator(`${dataKey}-idx`, { initialValue: [] });
   const keys = getFieldValue(`${dataKey}-idx`);
   getFieldDecorator(dataKey, { initialValue: [] });
   const data = getFieldValue(dataKey);
@@ -17,9 +19,6 @@ export default ({
 
   const remove = k => () => {
     const keys = getFieldValue(`${dataKey}-idx`);
-    if (keys.length === 1) {
-      return;
-    }
 
     const newData = [...data];
     newData[k] = undefined;
@@ -65,7 +64,30 @@ export default ({
     });
   };
 
-  console.log(data);
+  useEffect(() => {
+    if (!hasInitLoad && data.length > 0) {
+      const set = data.reduce((acc, current, idx) => {
+        const obj = Object.entries(current).reduce((_acc, [key, value]) => {
+          return {
+            ..._acc,
+            [`${dataKey}-${key}-${idx}`]: value
+          };
+        }, {});
+        return {
+          ...acc,
+          ...obj
+        };
+      }, {});
+      setFieldsValue({ ...set });
+      setHasInitLoad(true);
+    }
+
+    // When Create
+    if(!hasInitLoad && keys.length < 1) {
+      setHasInitLoad(true);
+    }
+
+  });
 
   return (
     <React.Fragment>
@@ -75,27 +97,31 @@ export default ({
           key={k}
           wrapperCol={{ span: 20 }}
         >
-          {fields.map(({ key, validationRules, inputParams, isTextArea }) =>
-            isTextArea ? (
-              <Input.TextArea
-                key={key}
-                value={data[k] && data[k][key] ? data[k][key] : ''}
-                onChange={handleFieldChange(k, key)}
-                style={{ width: '80%' }}
-                autosize
-                {...inputParams}
-              />
-            ) : (
-              <Input
-                key={key}
-                value={data[k] && data[k][key] ? data[k][key] : ''}
-                onChange={handleFieldChange(k, key)}
-                {...inputParams}
-              />
-            )
-          )}
+          {fields.map(({ key, validationRules, inputParams, isTextArea }) => (
+            <Form.Item key={key}>
+              {isTextArea
+                ? getFieldDecorator(`${dataKey}-${key}-${k}`, {
+                    rules: validationRules
+                  })(
+                    <Input.TextArea
+                      onChange={handleFieldChange(k, key)}
+                      style={{ width: '80%' }}
+                      autosize
+                      {...inputParams}
+                    />
+                  )
+                : getFieldDecorator(`${dataKey}-${key}-${k}`, {
+                    rules: validationRules
+                  })(
+                    <Input
+                      onChange={handleFieldChange(k, key)}
+                      {...inputParams}
+                    />
+                  )}
+            </Form.Item>
+          ))}
 
-          {keys.length > 1 ? (
+          {keys.length > 0 ? (
             <Icon
               type="minus-circle-o"
               onClick={remove(k)}

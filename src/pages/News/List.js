@@ -87,10 +87,17 @@ export default () => {
       <Table dataSource={list} loading={isLoading}>
         <Table.Column title="Title" dataIndex="title" key="title" />
         <Table.Column
+          title="Date"
+          dataIndex="date"
+          key="date"
+          sorter={(a, b) => moment(a.date).unix() - moment(b.date).unix()}
+        />
+        <Table.Column
           title="Last edit"
           dataIndex="timestamp"
           key="timestamp"
           render={renderLastEditTime}
+          sorter={(a, b) => parseInt(a.timestamp) - parseInt(b.timestamp)}
         />
         <Table.Column title="Action" key="action" render={renderAction} />
       </Table>

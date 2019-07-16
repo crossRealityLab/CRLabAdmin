@@ -44,7 +44,7 @@ const prepareUploadedData = data => {
         url: elem.file.url
       }));
     } else if (withLocalKey) {
-      result[key] = data[key].filter(elem => !!elem);
+      result[key] =  data[key] ? data[key].filter(elem => !!elem) : [];
     } else {
       result[key] = data[key] ? data[key] : '';
     }
@@ -123,7 +123,7 @@ const MemberForm = ({ form, match, history }) => {
         } else if (withLocalKey) {
           const idxValue = data[key]
             ? [...Array(data[key].length)].map((elem, idx) => idx)
-            : [0];
+            : defaultValue;
 
           setPair[`${key}-idx`] = idxValue;
           delaySetPair[key] = data[key] ? data[key] : defaultValue;
@@ -284,7 +284,13 @@ const MemberForm = ({ form, match, history }) => {
               key: 'title',
               inputParams: {
                 placeholder: 'title'
-              }
+              },
+              validationRules: [
+                {
+                  required: true,
+                  message: "Publication's title is required."
+                }
+              ]
             },
             {
               key: 'conference',
@@ -296,13 +302,25 @@ const MemberForm = ({ form, match, history }) => {
               key: 'year',
               inputParams: {
                 placeholder: 'year'
-              }
+              },
+              validationRules: [
+                {
+                  validator: (rule, value) => !isNaN(value),
+                  message: 'Input must be a number.'
+                }
+              ]
             },
             {
               key: 'link',
               inputParams: {
                 placeholder: 'link'
-              }
+              },
+              validationRules: [
+                {
+                  type: 'url',
+                  message: 'Input must be an url.'
+                }
+              ]
             }
           ]}
           {...form}

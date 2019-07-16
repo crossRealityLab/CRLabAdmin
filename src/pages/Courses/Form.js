@@ -5,9 +5,8 @@ import styled from 'styled-components';
 import uuidV4 from 'uuid/v4';
 
 import DynamicInput from '../../components/DynamicInput';
-import ImgUploader from '../../components/ImgUploader';
 import DynamicMutiInput from '../../components/DynamicMutiInput';
-import { InputItem, TextArea, Field } from '../../components/Input';
+import { InputItem, Field } from '../../components/Input';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/courses';
 import { create, get, update } from '../../apis/firebaseApis';
@@ -123,7 +122,7 @@ const MemberForm = ({ form, match, history }) => {
         } else if (withLocalKey) {
           const idxValue = data[key]
             ? [...Array(data[key].length)].map((elem, idx) => idx)
-            : [0];
+            : defaultValue;
 
           setPair[`${key}-idx`] = idxValue;
           delaySetPair[key] = data[key] ? data[key] : defaultValue;
@@ -270,13 +269,29 @@ const MemberForm = ({ form, match, history }) => {
               key: 'name',
               inputParams: {
                 placeholder: 'TA\'s name',
-              }
+              },
+              validationRules: [
+                {
+                  required: true,
+                  message: "TA's name is required."
+                }
+              ]
             },
             {
               key: 'email',
               inputParams: {
                 placeholder: 'TA\'s email'
-              }
+              },
+              validationRules: [
+                {
+                  required: true,
+                  message: "TA's email is required."
+                },
+                {
+                  type: 'email',
+                  message: "Input must be email."
+                },
+              ]
             },
           ]}
           {...form}

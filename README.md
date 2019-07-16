@@ -114,10 +114,10 @@ type Contact = {
 
 * Phase 1
 - [ ] Support Search Bar in `List`
-- [ ] Support Validation in `DynamicMultiInput`
+- [x] Support Validation in `DynamicMultiInput`
 - News
-  - [ ] Using Date picker or support regx validation
-  - [ ] Support sorted on `List`
+  - [x] Using Date picker or support regx validation
+  - [x] Support sorted on `List`
 - [x] Auth 
 - [x] Modulelize 各個不同類型 Input
   - Keep in components file
