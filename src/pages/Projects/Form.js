@@ -10,7 +10,7 @@ import DynamicMutiInput from '../../components/DynamicMutiInput';
 import { InputItem, TextArea, Field } from '../../components/Input';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/projects';
-import { create, get, update } from '../../apis/projects';
+import { create, get, update } from '../../apis/firebaseApis';
 
 const LoadingIcon = styled(Icon)`
   position: absolute;
@@ -58,12 +58,12 @@ const uploadData = async (data, uuid = '') => {
     if (uuid) {
       data.uuid = uuid;
       data.timestamp = Date.now();
-      await update(uuid, data);
+      await update('/projects', uuid, data);
     } else {
       data.uuid = uuidV4();
       data.createdTimestamp = Date.now();
       data.timestamp = data.createdTimestamp;
-      await create(data.uuid, data);
+      await create('/projects', data.uuid, data);
     }
   } catch (e) {
     throw e;
@@ -173,7 +173,7 @@ const ProjectForm = ({ form, match, history }) => {
     const fetchData = async uuid => {
       setIsLoading(true);
       // const data = await fakeAPI();
-      const data = await get(uuid);
+      const data = await get('/projects', uuid);
       if (data) {
         setData(data);
         setInitFormValue(data);
@@ -268,6 +268,7 @@ const ProjectForm = ({ form, match, history }) => {
           title="Cover"
           dataKey={dataBindingKeys.cover}
           isSingleImg
+          endpoint="/projects"
           {...form}
         />
       </Form.Item>
@@ -323,7 +324,7 @@ const ProjectForm = ({ form, match, history }) => {
           dataKey={dataBindingKeys.acceptedYear}
           validationRules={[
             {
-              validator: (rule, value) =>  value === undefined || !isNaN(value),
+              validator: (rule, value) => value === undefined || !isNaN(value),
               message: 'Input must be a number.'
             }
           ]}
@@ -355,7 +356,7 @@ const ProjectForm = ({ form, match, history }) => {
         />
       </InputItem>
       <Form.Item label="Yo">
-        <DynamicMutiInput dataKey='test' {...form} />
+        <DynamicMutiInput dataKey="test" {...form} />
       </Form.Item>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">

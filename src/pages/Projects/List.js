@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Table, Divider, Tag, Button, Popconfirm, notification } from 'antd';
 import _ from 'lodash';
 
-import { getAll, remove } from '../../apis/projects';
+import { getAll, remove } from '../../apis/firebaseApis';
 
 export default () => {
   const [list, setList] = useState([]);
@@ -14,7 +14,7 @@ export default () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await getAll();
+        const data = await getAll('/projects');
         setList(_.values(data));
         // console.log(_.values(data))
       } catch (e) {
@@ -28,7 +28,7 @@ export default () => {
   const onRemove = async uuid => {
     setIsLoading(true);
     try {
-      await remove(uuid);
+      await remove('/projects', uuid);
       setList(preList => preList.filter(elem => elem.uuid !== uuid));
       notification.success({
         message: `Remove Complete!`,

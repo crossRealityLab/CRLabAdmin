@@ -38,7 +38,10 @@ type Member = {
   [uuid: string]: {
     uuid: string;
     fullName: string;
-    avatar: string; // url
+    avatar: {
+      name: string;
+      url: string;
+    }[]; // url
     title: string; // e.g. Professor, PhD, master
     focusOn: string[]; // e.g. haptic, 3d-model, UIUX
     email: string;
@@ -108,6 +111,11 @@ type Contact = {
 
 - [ ] Search Bar
 - [ ] Remain Info
+- [ ] Refactor `setInitFormValue` func.
+  - Without using key to decide what to do
+- [ ] Refactor `prepareUploadedData` func.
+  - Without using key to decide what to do
+- [ ] Dynamic multiple input validation
 - [x] Auth 
 - [x] Modulelize 各個不同類型 Input
   - Keep in components file

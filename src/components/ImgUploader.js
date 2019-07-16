@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Icon, Upload, Modal, Input, notification } from 'antd';
 import uuidV4 from 'uuid/v4';
-import { uploadImg } from '../apis/projects';
+import { uploadImg } from '../apis/firebaseApis';
 
 const uploadButton = (
   <div>
@@ -24,6 +24,7 @@ export default ({
   getFieldDecorator,
   getFieldValue,
   setFieldsValue,
+  endpoint = '',
   isSingleImg = false,
   withCaption = false
 }) => {
@@ -46,7 +47,7 @@ export default ({
       try {
         const fileName = file.name;
         // 拖曳後即上傳，即使沒有 submit 出去。
-        const { image, imageURL } = await uploadImg(fileName, file);
+        const { image, imageURL } = await uploadImg(endpoint, fileName, file);
         /**
          * Why ...file will miss file.name ???
          */

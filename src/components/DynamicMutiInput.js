@@ -6,20 +6,7 @@ export default ({
   getFieldDecorator,
   getFieldValue,
   setFieldsValue,
-  fields = [
-    {
-      key: 'p1',
-      inputParams: {
-        placeholder: 'p1'
-      }
-    },
-    {
-      key: 'p2',
-      inputParams: {
-        placeholder: 'p2'
-      }
-    }
-  ],
+  fields = [],
 }) => {
   getFieldDecorator(`${dataKey}-idx`, { initialValue: [0] });
   const keys = getFieldValue(`${dataKey}-idx`);
