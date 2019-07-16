@@ -8,6 +8,7 @@ import Logo from '../components/Logo';
 import Members from './Members';
 import News from './News';
 import Projects from './Projects';
+import Courses from './Courses';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -45,17 +46,28 @@ export default () => {
               <span>News</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="4">
+            <Link to="/courses" activeClassName="active">
+              <Icon type="book" />
+              <span>Courses</span>
+            </Link>
+          </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 20px', textAlign: 'end' }}>
-          <Button type="danger" onClick={signOut}>Sign out</Button>
+        <Header
+          style={{ background: '#fff', padding: '0 20px', textAlign: 'end' }}
+        >
+          <Button type="danger" onClick={signOut}>
+            Sign out
+          </Button>
         </Header>
         <Content style={{ margin: '24px 16px 0' }}>
           <Switch>
             <Route path="/projects" component={Projects} />
             <Route path="/members" component={Members} />
             <Route path="/news" component={News} />
+            <Route path="/courses" component={Courses} />
             <Redirect to="/projects" />
           </Switch>
         </Content>

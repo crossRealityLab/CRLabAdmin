@@ -83,12 +83,15 @@ type Course = {
   [uuid: string]: {
     uuid: string;
     courseID: string;
+    name: string;
     credits: number;
     loaction: string; // e.g. YYYY/MM/DD
-    tas: string[];
+    tas: {
+      name: string;
+      email: string;
+    }[],
     office: string;
     officeHours: string;
-    contact: string;  // maybe email
     descriptions: string[];
     link: string; // to nctu course
     timestamp: number;
@@ -97,7 +100,7 @@ type Course = {
 
 type Contact = {
   name: string;
-  tel: string;
+  email: string;
   office: string;
   officeHours: string;
   lab: string;
@@ -109,13 +112,12 @@ type Contact = {
 
 ## TODO
 
-- [ ] Search Bar
-- [ ] Remain Info
-- [ ] Refactor `setInitFormValue` func.
-  - Without using key to decide what to do
-- [ ] Refactor `prepareUploadedData` func.
-  - Without using key to decide what to do
-- [ ] Dynamic multiple input validation
+* Phase 1
+- [ ] Support Search Bar in `List`
+- [ ] Support Validation in `DynamicMultiInput`
+- News
+  - [ ] Using Date picker or support regx validation
+  - [ ] Support sorted on `List`
 - [x] Auth 
 - [x] Modulelize 各個不同類型 Input
   - Keep in components file
@@ -126,3 +128,14 @@ type Contact = {
     - check 是否帶有 id
       - 有: Edit -> 會有 initial data state .
       - 無: Create
+
+* Phase 2 
+- [ ] Refactor `setInitFormValue` func.
+  - Without using key to decide what to do
+- [ ] Refactor `prepareUploadedData` func.
+  - Without using key to decide what to do
+- [ ] Combine `DynamicMultiInput` & `DynamicInput`
+- [ ] Configlize `Main` 
+- [ ] Combine all sections's: `Form`, `List`, `index`
+  - configlize
+- [ ] Combine all `configs`
