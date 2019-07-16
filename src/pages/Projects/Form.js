@@ -6,6 +6,7 @@ import uuidV4 from 'uuid/v4';
 
 import DynamicInput from '../../components/DynamicInput';
 import ImgUploader from '../../components/ImgUploader';
+import DynamicMutiInput from '../../components/DynamicMutiInput';
 import { InputItem, TextArea, Field } from '../../components/Input';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/projects';
@@ -353,6 +354,9 @@ const ProjectForm = ({ form, match, history }) => {
           {...form}
         />
       </InputItem>
+      <Form.Item label="Yo">
+        <DynamicMutiInput dataKey='test' {...form} />
+      </Form.Item>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
           Submit
