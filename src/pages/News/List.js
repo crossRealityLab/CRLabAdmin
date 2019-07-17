@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Table, Divider, Button, Popconfirm, notification } from 'antd';
 import _ from 'lodash';
 
+import getFiltersFuncProps from '../../utils/getFiltersFuncProps';
 import { getAll, remove } from '../../apis/firebaseApis';
 
 export default () => {
@@ -85,7 +86,12 @@ export default () => {
         </Button>
       </Link>
       <Table dataSource={list} loading={isLoading}>
-        <Table.Column title="Title" dataIndex="title" key="title" />
+        <Table.Column
+          title="Title"
+          dataIndex="title"
+          key="title"
+          {...getFiltersFuncProps('title')}
+        />
         <Table.Column
           title="Date"
           dataIndex="date"

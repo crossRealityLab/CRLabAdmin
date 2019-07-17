@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Table, Divider, Button, Popconfirm, notification } from 'antd';
 import _ from 'lodash';
 
+import getFiltersFuncProps from '../../utils/getFiltersFuncProps';
 import { getAll, remove } from '../../apis/firebaseApis';
 
 export default () => {
@@ -45,7 +46,6 @@ export default () => {
     }
   };
 
-
   const renderLastEditTime = useCallback(
     timestamp =>
       moment(timestamp)
@@ -86,8 +86,18 @@ export default () => {
         </Button>
       </Link>
       <Table dataSource={list} loading={isLoading}>
-        <Table.Column title="Course ID" dataIndex="courseID" key="courseID" />
-        <Table.Column title="Name" dataIndex="name" key="name" />
+        <Table.Column
+          title="Course ID"
+          dataIndex="courseID"
+          key="courseID"
+          {...getFiltersFuncProps('courseID')}
+        />
+        <Table.Column
+          title="Name"
+          dataIndex="name"
+          key="name"
+          {...getFiltersFuncProps('name')}
+        />
         <Table.Column title="Location" dataIndex="location" key="location" />
         <Table.Column
           title="Last edit"

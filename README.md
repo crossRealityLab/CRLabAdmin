@@ -113,7 +113,7 @@ type Contact = {
 ## TODO
 
 * Phase 1
-- [ ] Support Search Bar in `List`
+- [x] Support Search Bar in `List`
 - [x] Support Validation in `DynamicMultiInput`
 - News
   - [x] Using Date picker or support regx validation
