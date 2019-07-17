@@ -2,6 +2,7 @@
   "name": "crlabadmin",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://crossrealitylab.github.io/CRLabAdmin",
   "dependencies": {
     "antd": "^3.20.0",
     "firebase": "^6.2.4",
@@ -17,7 +18,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "deploy": "yarn bulid && node deploy.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -33,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1"
   }
 }
