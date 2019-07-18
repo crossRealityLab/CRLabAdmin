@@ -355,9 +355,6 @@ const ProjectForm = ({ form, match, history }) => {
           {...form}
         />
       </InputItem>
-      <Form.Item label="Yo">
-        <DynamicMutiInput dataKey="test" {...form} />
-      </Form.Item>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
           Submit
