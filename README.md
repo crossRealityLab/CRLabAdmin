@@ -130,9 +130,9 @@ type Contact = {
       - 無: Create
 
 * Phase 2 
-- [ ] Refactor `setInitFormValue` func.
+- [x] Refactor `setInitFormValue` func.
   - Without using key to decide what to do
-- [ ] Refactor `prepareUploadedData` func.
+- [x] Refactor `prepareUploadedData` func.
   - Without using key to decide what to do
 - [ ] Combine `DynamicMultiInput` & `DynamicInput`
 - [ ] Configlize `Main` 

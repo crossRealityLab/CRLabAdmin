@@ -1,17 +1,22 @@
+import { InputType } from '../constants';
+
 /**
  * In order to work with antd Form data binding
  */
 
 export const dataBindingConfs = [
   {
+    type: InputType.FIELD,
     key: 'title',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'date',
     defaultValue: '',
   },
   {
+    type: InputType.FIELD,
     key: 'description',
     defaultValue: ''
   },

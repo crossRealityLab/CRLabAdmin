@@ -1,36 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Table, Divider, Button, Popconfirm, notification } from 'antd';
-import _ from 'lodash';
 
+import useListData from '../../hooks/useListData';
 import getFiltersFuncProps from '../../utils/getFiltersFuncProps';
-import { getAll, remove } from '../../apis/firebaseApis';
+import { remove } from '../../apis/firebaseApis';
 
 export default () => {
-  const [list, setList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, setData, isLoading, setIsLoading } = useListData('/members');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getAll('/members');
-        setList(_.values(data));
-        // console.log(_.values(data))
-      } catch (e) {
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const onRemove = async uuid => {
+  const onRemove = useCallback(async uuid => {
     setIsLoading(true);
     try {
       await remove('/members', uuid);
-      setList(preList => preList.filter(elem => elem.uuid !== uuid));
+      setData(preList => preList.filter(elem => elem.uuid !== uuid));
       notification.success({
         message: `Remove Complete!`,
         duration: 4
@@ -44,7 +28,7 @@ export default () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [setIsLoading, setData]);
 
   const renderLastEditTime = useCallback(
     timestamp =>
@@ -85,7 +69,7 @@ export default () => {
           Create
         </Button>
       </Link>
-      <Table dataSource={list} loading={isLoading}>
+      <Table dataSource={data} loading={isLoading}>
         <Table.Column
           title="Name"
           dataIndex="fullName"

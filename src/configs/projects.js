@@ -1,65 +1,81 @@
+import { InputType } from '../constants';
+
 /**
  * In order to work with antd Form data binding
  */
 
 export const dataBindingConfs = [
   {
+    type: InputType.FIELD,
     key: 'showTitle',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'title',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'year',
-    defaultValue: '',
+    defaultValue: ''
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'authors',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [0],
   },
   {
+    type: InputType.FIELD,
     key: 'abstract',
     defaultValue: ''
   },
   {
+    type: InputType.IMG,
     key: 'cover',
-    defaultValue: [],
+    defaultValue: []
   },
   {
+    type: InputType.IMGS_WITH_CAPTION,
     key: 'imgs',
     defaultValue: []
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'videos',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [],
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'descriptions',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [0],
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'tags',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [],
   },
   {
+    type: InputType.FIELD,
     key: 'acceptedYear',
-    defaultValue: '',
+    defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'publicationOn',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'pdf',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'doi',
     defaultValue: ''
   }

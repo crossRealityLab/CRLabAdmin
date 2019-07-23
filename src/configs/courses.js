@@ -1,43 +1,53 @@
+import { InputType } from '../constants';
 /**
  * In order to work with antd Form data binding
  */
 
 export const dataBindingConfs = [
   {
+    type: InputType.FIELD,
     key: 'courseID',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'name',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'credits',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'location',
     defaultValue: '',
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'tas',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [0],
   },
   {
+    type: InputType.FIELD,
     key: 'office',
     defaultValue: ''
   },
   {
+    type: InputType.FIELD,
     key: 'officeHours',
-    defaultValue: [],
+    defaultValue: '',
   },
   {
+    type: InputType.MULTI_FIELDS,
     key: 'descriptions',
     defaultValue: [],
-    withLocalKey: true
+    defaultKeys: [0],
   },
   {
+    type: InputType.FIELD,
     key: 'link',
     defaultValue: '',
   },
