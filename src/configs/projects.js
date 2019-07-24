@@ -1,9 +1,18 @@
 import { InputType } from '../constants';
+import Projects from '../pages/Projects';
+
+export const basic = {
+  name: 'Projects',
+  path: '/projects',
+  iconType: 'project',
+  page: Projects,
+};
+
+console.log(basic);
 
 /**
  * In order to work with antd Form data binding
  */
-
 export const dataBindingConfs = [
   {
     type: InputType.FIELD,

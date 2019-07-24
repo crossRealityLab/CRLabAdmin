@@ -5,10 +5,7 @@ import { Layout, Menu, Icon, Button } from 'antd';
 
 import firebase from '../firebase';
 import Logo from '../components/Logo';
-import Members from './Members';
-import News from './News';
-import Projects from './Projects';
-import Courses from './Courses';
+import { pagesConfig } from '../configs/share';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -18,63 +15,63 @@ const Link = styled(NavLink)`
   }
 `;
 
+const StyledLayout = styled(Layout)`
+  min-width: 100vw;
+  min-height: 100vh;
+`;
+
+const StyledHeader = styled(Header)`
+  background: #fff;
+  padding: 0 20px;
+  text-align: end; 
+`;
+
+const StyledContent = styled(Content)`
+  margin: 24px 16px 0;
+`;
+
+const StyledFooter = styled(Footer)`
+  text-align: center;
+`;
+
 export default () => {
   const signOut = useCallback(() => {
     firebase.auth().signOut();
   }, []);
 
   return (
-    <Layout style={{ minWidth: '100vw', minHeight: '100vh' }}>
+    <StyledLayout>
       <Sider breakpoint="lg" collapsedWidth="0">
         <Logo>Cross Reality Lab</Logo>
         <Menu theme="dark" mode="inline" selectedKeys={[]}>
-          <Menu.Item key="1">
-            <Link to="/projects" activeClassName="active">
-              <Icon type="project" />
-              <span>Projects</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Link to="/members" activeClassName="active">
-              <Icon type="user" />
-              <span>Members</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <Link to="/news" activeClassName="active">
-              <Icon type="alert" />
-              <span>News</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="4">
-            <Link to="/courses" activeClassName="active">
-              <Icon type="book" />
-              <span>Courses</span>
-            </Link>
-          </Menu.Item>
+          {pagesConfig.map(({ name, path, iconType }) => (
+            <Menu.Item key={name}>
+              <Link to={path} activeClassName="active">
+                <Icon type={iconType} />
+                <span>{name}</span>
+              </Link>
+            </Menu.Item>
+          ))}
         </Menu>
       </Sider>
       <Layout>
-        <Header
-          style={{ background: '#fff', padding: '0 20px', textAlign: 'end' }}
-        >
+        <StyledHeader>
           <Button type="danger" onClick={signOut}>
             Sign out
           </Button>
-        </Header>
-        <Content style={{ margin: '24px 16px 0' }}>
+        </StyledHeader>
+        <StyledContent>
           <Switch>
-            <Route path="/projects" component={Projects} />
-            <Route path="/members" component={Members} />
-            <Route path="/news" component={News} />
-            <Route path="/courses" component={Courses} />
+            {pagesConfig.map(({ path, page }) => (
+              <Route key={path} path={path} component={page} />
+            ))}
             <Redirect to="/projects" />
           </Switch>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
+        </StyledContent>
+        <StyledFooter>
           Cross Reality Lab Admin ©2019
-        </Footer>
+        </StyledFooter>
       </Layout>
-    </Layout>
+    </StyledLayout>
   );
 };

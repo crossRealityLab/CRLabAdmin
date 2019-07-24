@@ -1,4 +1,12 @@
 import { InputType } from '../constants';
+import Members from '../pages/Members';
+
+export const basic = {
+  name: 'Members',
+  path: '/members',
+  iconType: 'user',
+  page: Members,
+};
 /**
  * In order to work with antd Form data binding
  */

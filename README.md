@@ -135,7 +135,4 @@ type Contact = {
 - [x] Refactor `prepareUploadedData` func.
   - Without using key to decide what to do
 - [ ] Combine `DynamicMultiInput` & `DynamicInput`
-- [ ] Configlize `Main` 
-- [ ] Combine all sections's: `Form`, `List`, `index`
-  - configlize
-- [ ] Combine all `configs`
+- [x] Configlize `Main` 
