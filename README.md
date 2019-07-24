@@ -134,5 +134,5 @@ type Contact = {
   - Without using key to decide what to do
 - [x] Refactor `prepareUploadedData` func.
   - Without using key to decide what to do
-- [x] Refactor `DynamicMultiInput` & `DynamicInput`
+- [x] Refactor `DynamicMultiInput` & `DynamicInput`
 - [x] Configlize `Main` 
