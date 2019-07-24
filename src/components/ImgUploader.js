@@ -1,9 +1,14 @@
 import React, { useState, useCallback } from 'react';
+import styled from 'styled-components';
 import { Icon, Upload, Modal, Input, notification } from 'antd';
 import uuidV4 from 'uuid/v4';
 import { uploadImg } from '../apis/firebaseApis';
 
-const uploadButton = (
+const Img = styled.img`
+  width: 100%;
+`;
+
+const UploadButton = (
   <div>
     <Icon type="plus" />
     <div>Drag or Click to upload</div>
@@ -72,7 +77,7 @@ export default ({
         onError(e);
       }
     },
-    [getFieldValue, setFieldsValue, dataKey]
+    [getFieldValue, setFieldsValue, endpoint, dataKey]
   );
 
   const handleCancel = useCallback(
@@ -160,7 +165,7 @@ export default ({
         getFieldValue(dataKey) &&
         getFieldValue(dataKey).length >= 1
           ? null
-          : uploadButton}
+          : UploadButton}
       </Upload>
       {withCaption &&
         getFieldValue(dataKey) &&
@@ -176,11 +181,7 @@ export default ({
         footer={null}
         onCancel={handleCancel}
       >
-        <img
-          alt="example"
-          style={{ width: '100%' }}
-          src={previewStatus.previewImage}
-        />
+        <Img alt="example" src={previewStatus.previewImage} />
       </Modal>
     </>
   );

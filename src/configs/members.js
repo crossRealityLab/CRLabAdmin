@@ -7,10 +7,10 @@ export const basic = {
   iconType: 'user',
   page: Members,
 };
+
 /**
  * In order to work with antd Form data binding
  */
-
 export const dataBindingConfs = [
   {
     type: InputType.FIELD,

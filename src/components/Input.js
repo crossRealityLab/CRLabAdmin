@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Input, Form } from 'antd';
 
-
 /**
  * Fucking antd, validating msg only show when input is the directive child of Form.Item,
  * so in normal Input, I mannually add Form.Item as wrapper.
@@ -20,7 +19,7 @@ export const TextArea = ({
   <Form.Item>
     {getFieldDecorator(dataKey, {
       rules: validationRules
-    })(<Input.TextArea autosize />)}
+    })(<Input.TextArea {...inputProps} autosize />)}
   </Form.Item>
 );
 

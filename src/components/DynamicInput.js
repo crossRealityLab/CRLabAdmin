@@ -1,5 +1,40 @@
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
+import styled from 'styled-components';
 import { Form, Input, Button, Icon } from 'antd';
+
+export const InputWrapper = styled(Form.Item).attrs(() => ({
+  wrapperCol: { span: 20 }
+}))`
+  width: 150%;
+  margin-bottom: -20px;
+  z-index: 1;
+`;
+
+export const AddButtonWrapper = styled(Form.Item).attrs(() => ({
+  wrapperCol: { span: 12, offset: 2 }
+}))`
+  margin-bottom: unset;
+`;
+
+export const TextArea = styled(Input.TextArea)`
+  width: 80%;
+`;
+
+export const Field = styled(Input)`
+  width: 80%;
+`;
+
+export const RemoveIcon = styled(Icon).attrs(() => ({
+  type: 'minus-circle-o'
+}))`
+  margin-left: 10px;
+`;
+
+export const AddButton = styled(Button).attrs(() => ({
+  type: 'dashed'
+}))`
+  width: 60%;
+`;
 
 export default ({
   dataKey,
@@ -25,49 +60,30 @@ export default ({
     });
   };
 
-  const add = () => {
+  const add = useCallback(() => {
     const keys = getFieldValue(`${dataKey}-idx`);
     setFieldsValue({
       [`${dataKey}-idx`]: [...keys, currentId.current]
     });
 
     currentId.current = currentId.current + 1;
-  };
+  }, [getFieldValue, setFieldsValue, dataKey]);
 
   return (
     <React.Fragment>
       {keys.map(k => (
-        <Form.Item
-          style={{ width: '150%', marginBottom: '-20px' }}
-          key={k}
-          wrapperCol={{ span: 20 }}
-        >
+        <InputWrapper key={k}>
           {getFieldDecorator(`${dataKey}[${k}]`, {
             rules: validationRules
-          })(
-            isTextArea ? (
-              <Input.TextArea style={{ width: '80%' }} autosize />
-            ) : (
-              <Input style={{ width: '80%' }} />
-            )
-          )}
-          {keys.length > 1 ? (
-            <Icon
-              type="minus-circle-o"
-              onClick={remove(k)}
-              style={{ marginLeft: '10px' }}
-            />
-          ) : null}
-        </Form.Item>
+          })(isTextArea ? <TextArea autosize /> : <Field />)}
+          {keys.length > 1 && <RemoveIcon onClick={remove(k)} />}
+        </InputWrapper>
       ))}
-      <Form.Item
-        wrapperCol={{ span: 12, offset: 2 }}
-        style={{ marginBottom: 'unset' }}
-      >
-        <Button type="dashed" onClick={add} style={{ width: '60%' }}>
+      <AddButtonWrapper>
+        <AddButton onClick={add}>
           <Icon type="plus" /> Add field
-        </Button>
-      </Form.Item>
+        </AddButton>
+      </AddButtonWrapper>
     </React.Fragment>
   );
 };

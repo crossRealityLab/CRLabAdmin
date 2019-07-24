@@ -8,8 +8,6 @@ export const basic = {
   page: Projects,
 };
 
-console.log(basic);
-
 /**
  * In order to work with antd Form data binding
  */

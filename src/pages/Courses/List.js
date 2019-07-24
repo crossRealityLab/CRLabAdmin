@@ -10,25 +10,28 @@ import { remove } from '../../apis/firebaseApis';
 export default () => {
   const { data, setData, isLoading, setIsLoading } = useListData('/courses');
 
-  const onRemove = useCallback(async uuid => {
-    setIsLoading(true);
-    try {
-      await remove('/courses', uuid);
-      setData(preList => preList.filter(elem => elem.uuid !== uuid));
-      notification.success({
-        message: `Remove Complete!`,
-        duration: 4
-      });
-    } catch (e) {
-      notification.error({
-        message: `Remove Error!`,
-        description: `${e}`,
-        duration: 4
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setIsLoading, setData]);
+  const onRemove = useCallback(
+    async uuid => {
+      setIsLoading(true);
+      try {
+        await remove('/courses', uuid);
+        setData(preList => preList.filter(elem => elem.uuid !== uuid));
+        notification.success({
+          message: `Remove Complete!`,
+          duration: 4
+        });
+      } catch (e) {
+        notification.error({
+          message: `Remove Error!`,
+          description: `${e}`,
+          duration: 4
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setIsLoading, setData]
+  );
 
   const renderLastEditTime = useCallback(
     timestamp =>
@@ -53,7 +56,7 @@ export default () => {
         </Popconfirm>
       </span>
     ),
-    []
+    [onRemove]
   );
 
   return (
@@ -69,7 +72,11 @@ export default () => {
           Create
         </Button>
       </Link>
-      <Table dataSource={data} loading={isLoading}>
+      <Table
+        dataSource={data}
+        loading={isLoading}
+        rowKey={record => record.uuid}
+      >
         <Table.Column
           title="Course ID"
           dataIndex="courseID"

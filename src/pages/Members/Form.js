@@ -1,28 +1,19 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Spin, Icon, notification } from 'antd';
+import { Form, Button, notification } from 'antd';
 import styled from 'styled-components';
 
 import DynamicInput from '../../components/DynamicInput';
 import ImgUploader from '../../components/ImgUploader';
 import DynamicMutiInput from '../../components/DynamicMutiInput';
 import { InputItem, TextArea, Field } from '../../components/Input';
+import Loading from '../../components/Loading';
 
 import useFormData from '../../hooks/useFormData';
 import useBinderInitializer from '../../hooks/useBinderInitializer';
 
 import { dataBindingConfs, dataBindingKeys } from '../../configs/members';
 import { prepareData, uploadData } from '../../utils/uploadDataHelpers';
-
-const LoadingIcon = styled(Icon).attrs(() => ({
-  type: 'loading',
-  spin: true
-}))`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  font-size: 24;
-`;
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -70,7 +61,7 @@ const MemberForm = ({ form, match, history }) => {
   );
 
   if (isLoading) {
-    return <Spin indicator={<LoadingIcon />} />;
+    return <Loading />;
   }
 
   return (

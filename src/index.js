@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { HashRouter } from "react-router-dom";
-import "antd/dist/antd.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { HashRouter } from 'react-router-dom';
+import 'antd/dist/antd.css';
 
-import App from "./App";
+import App from './App';
 import { AuthProvider } from './providers/Auth';
-import * as serviceWorker from "./serviceWorker";
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <HashRouter>
@@ -13,7 +13,7 @@ ReactDOM.render(
       <App />
     </AuthProvider>
   </HashRouter>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

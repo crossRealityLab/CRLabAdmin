@@ -1,5 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Form, Input, Button, Icon } from 'antd';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Form, Icon } from 'antd';
+
+import {
+  InputWrapper,
+  AddButtonWrapper,
+  TextArea,
+  Field,
+  RemoveIcon,
+  AddButton
+} from './DynamicInput';
 
 export default ({
   dataKey,
@@ -8,13 +17,12 @@ export default ({
   setFieldsValue,
   fields = []
 }) => {
-  const [hasInitLoad, setHasInitLoad] = useState(false);
-
   getFieldDecorator(`${dataKey}-idx`, { initialValue: [] });
   const keys = getFieldValue(`${dataKey}-idx`);
   getFieldDecorator(dataKey, { initialValue: [] });
   const data = getFieldValue(dataKey);
 
+  const [hasInitLoad, setHasInitLoad] = useState(false);
   const currentId = useRef(keys.length);
 
   const remove = k => () => {
@@ -29,7 +37,7 @@ export default ({
     });
   };
 
-  const add = () => {
+  const add = useCallback(() => {
     const keys = getFieldValue(`${dataKey}-idx`);
 
     setFieldsValue({
@@ -37,8 +45,9 @@ export default ({
     });
 
     currentId.current = currentId.current + 1;
-  };
+  }, [getFieldValue, setFieldsValue, dataKey]);
 
+  // Control Input by ourself
   const handleFieldChange = (idx, key) => e => {
     const newData = [...data];
 
@@ -66,46 +75,43 @@ export default ({
 
   useEffect(() => {
     if (!hasInitLoad && data.length > 0) {
-      const set = data.reduce((acc, current, idx) => {
-        const obj = Object.entries(current).reduce((_acc, [key, value]) => {
-          return {
+      const setPairs = data.reduce((acc, current, idx) => {
+        const obj = Object.entries(current).reduce(
+          (_acc, [key, value]) => ({
             ..._acc,
             [`${dataKey}-${key}-${idx}`]: value
-          };
-        }, {});
+          }),
+          {}
+        );
+
         return {
           ...acc,
           ...obj
         };
       }, {});
-      setFieldsValue({ ...set });
+
+      setFieldsValue(setPairs);
       setHasInitLoad(true);
     }
 
     // When Create
-    if(!hasInitLoad && keys.length < 1) {
+    if (!hasInitLoad && keys.length < 1) {
       setHasInitLoad(true);
     }
-
-  });
+  }, [hasInitLoad, data, keys, dataKey, setFieldsValue, setHasInitLoad]);
 
   return (
-    <React.Fragment>
+    <>
       {keys.map(k => (
-        <Form.Item
-          style={{ width: '150%', marginBottom: '-20px' }}
-          key={k}
-          wrapperCol={{ span: 20 }}
-        >
+        <InputWrapper key={k}>
           {fields.map(({ key, validationRules, inputParams, isTextArea }) => (
             <Form.Item key={key}>
               {isTextArea
                 ? getFieldDecorator(`${dataKey}-${key}-${k}`, {
                     rules: validationRules
                   })(
-                    <Input.TextArea
+                    <TextArea
                       onChange={handleFieldChange(k, key)}
-                      style={{ width: '80%' }}
                       autosize
                       {...inputParams}
                     />
@@ -113,31 +119,21 @@ export default ({
                 : getFieldDecorator(`${dataKey}-${key}-${k}`, {
                     rules: validationRules
                   })(
-                    <Input
+                    <Field
                       onChange={handleFieldChange(k, key)}
                       {...inputParams}
                     />
                   )}
             </Form.Item>
           ))}
-
-          {keys.length > 0 ? (
-            <Icon
-              type="minus-circle-o"
-              onClick={remove(k)}
-              style={{ marginLeft: '10px' }}
-            />
-          ) : null}
-        </Form.Item>
+          {keys.length > 0 && <RemoveIcon onClick={remove(k)} />}
+        </InputWrapper>
       ))}
-      <Form.Item
-        wrapperCol={{ span: 12, offset: 2 }}
-        style={{ marginBottom: 'unset' }}
-      >
-        <Button type="dashed" onClick={add} style={{ width: '60%' }}>
+      <AddButtonWrapper>
+        <AddButton onClick={add}>
           <Icon type="plus" /> Add field
-        </Button>
-      </Form.Item>
-    </React.Fragment>
+        </AddButton>
+      </AddButtonWrapper>
+    </>
   );
 };

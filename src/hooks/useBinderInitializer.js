@@ -69,7 +69,7 @@ export default ({ data, dataBindingConfs, getFieldDecorator, setFieldsValue }) =
 
   useEffect(() => {
     createDataBinder();
-  }, []);
+  }, [createDataBinder]);
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
