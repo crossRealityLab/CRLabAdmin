@@ -112,6 +112,11 @@ type Contact = {
 
 ## TODO
 
+* 補
+- [ ] LabIntroduction
+- [ ] Contact
+- [ ] Member 加上 graduateYear
+
 * Phase 1
 - [x] Support Search Bar in `List`
 - [x] Support Validation in `DynamicMultiInput`
