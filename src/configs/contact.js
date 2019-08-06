@@ -44,9 +44,9 @@ export const dataBindingConfs = [
     defaultValue: ''
   },
   {
-    type: InputType.FIELD,
+    type: InputType.IMG,
     key: 'banner',
-    defaultValue: ''
+    defaultValue: [],
   },
 ];
 

@@ -161,11 +161,11 @@ export default ({
         onRemove={handleImgRemove}
         beforeUpload={handleImgUpload}
       >
-        {isSingleImg &&
-        getFieldValue(dataKey) &&
-        getFieldValue(dataKey).length >= 1
-          ? null
-          : UploadButton}
+        {!(
+          isSingleImg &&
+          getFieldValue(dataKey) &&
+          getFieldValue(dataKey).length >= 1
+        ) && UploadButton}
       </Upload>
       {withCaption &&
         getFieldValue(dataKey) &&

@@ -4,6 +4,8 @@ import { Form, Button, notification } from 'antd';
 import styled from 'styled-components';
 
 import { InputItem, Field } from '../components/Input';
+import ImgUploader from '../components/ImgUploader';
+
 import Loading from '../components/Loading';
 
 import useFormData from '../hooks/useFormData';
@@ -122,18 +124,14 @@ const LabIntoForm = ({ form }) => {
       <InputItem label="Description">
         <Field dataKey={dataBindingKeys.description} {...form} />
       </InputItem>
-      <InputItem label="Banner link">
-        <Field
+      <Form.Item label="Banner">
+        <ImgUploader
           dataKey={dataBindingKeys.banner}
-          validationRules={[
-            {
-              type: 'url',
-              message: 'Input must be an url.'
-            }
-          ]}
+          isSingleImg
+          endpoint="/contact"
           {...form}
         />
-      </InputItem>
+      </Form.Item>
 
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
