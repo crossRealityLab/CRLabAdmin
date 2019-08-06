@@ -137,6 +137,19 @@ const MemberForm = ({ form, match, history }) => {
           {...form}
         />
       </InputItem>
+      <InputItem label="Graduate year">
+        <Field
+          dataKey={dataBindingKeys.graduateYear}
+          validationRules={[
+            {
+              validator: (rule, value) => !isNaN(value),
+              message:
+                'Input must be a number'
+            }
+          ]}
+          {...form}
+        />
+      </InputItem>
       <InputItem label="About">
         <TextArea dataKey={dataBindingKeys.about} {...form} />
       </InputItem>

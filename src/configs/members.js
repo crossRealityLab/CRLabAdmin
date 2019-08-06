@@ -49,6 +49,11 @@ export const dataBindingConfs = [
     defaultValue: '',
   },
   {
+    type: InputType.FIELD,
+    key: 'graduateYear',
+    defaultValue: '',
+  },
+  {
     type: InputType.MULTI_FIELDS,
     key: 'publications',
     defaultValue: [],

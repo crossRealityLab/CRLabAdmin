@@ -57,6 +57,7 @@ type Member = {
       title: string;
       year: number;
     }[];
+    graduateYear: number;
     timestamp: number;
   };
 };
@@ -115,7 +116,7 @@ type Contact = {
 * 補
 - [ ] LabIntroduction
 - [ ] Contact
-- [ ] Member 加上 graduateYear
+- [x] Member 加上 graduateYear
 
 * Phase 1
 - [x] Support Search Bar in `List`
