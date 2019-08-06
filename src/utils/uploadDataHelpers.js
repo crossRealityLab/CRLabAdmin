@@ -43,3 +43,13 @@ export const uploadData = async (data, endpoint, uuid = '') => {
     throw e;
   }
 };
+
+export const uploadPlainData = async (data, endpoint) => {
+  try {
+    data.createdTimestamp = Date.now();
+    data.timestamp = data.createdTimestamp;
+    await update(endpoint, data);
+  } catch (e) {
+    throw e;
+  }
+};

@@ -114,8 +114,8 @@ type Contact = {
 ## TODO
 
 * 補
-- [ ] LabIntroduction
-- [ ] Contact
+- [x] LabIntroduction
+- [x] Contact
 - [x] Member 加上 graduateYear
 
 * Phase 1

@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { get } from '../apis/firebaseApis';
 
 
-export default (endpoint = '', uuid = '') => {
+export default function(endpoint = '', uuid) {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({});
+  const argsLength = arguments.length;  // 1: from LabIntro or Contact
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +22,7 @@ export default (endpoint = '', uuid = '') => {
       }
     };
 
-    if(uuid) {
+    if(uuid || argsLength === 1) {
       fetchData();
     } else {
       setIsLoading(false);

@@ -26,22 +26,24 @@ export const getAll = (endpoint) => {
 };
 
 export const get = (endpoint, uuid) => {
+  const url = uuid ? `${endpoint}/${uuid}` : endpoint;
   return db
-    .ref(`${endpoint}/${uuid}`)
+    .ref(url)
     .once('value')
     .then(data => data.val())
     .catch(e => {
-      console.error(`GET ${endpoint} ${uuid} ERROR: ${e}`);
+      console.error(`GET ${url} ERROR: ${e}`);
       throw e;
     });
 };
 
-export const update = (endpoint, uuid, data) => {
-  return db.ref(`${endpoint}/${uuid}`)
+export const update = (endpoint, data, uuid) => {
+  const url = uuid ? `${endpoint}/${uuid}` : endpoint;
+  return db.ref(url)
     .update(data)
-    .then(() => console.log(`UPDATE ${endpoint} ${uuid} COMPLETE`))
+    .then(() => console.log(`UPDATE ${url} COMPLETE`))
     .catch(e => {
-      console.error(`UPDATE ${endpoint} ${uuid} ERROR: ${e}`);
+      console.error(`UPDATE ${url} ERROR: ${e}`);
       throw e;
     });
 };
