@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/CRLabAdmin/static/js/main.373cb2e3.chunk.js",
-    "main.js.map": "/CRLabAdmin/static/js/main.373cb2e3.chunk.js.map",
+    "main.js": "/CRLabAdmin/static/js/main.2b9a72b8.chunk.js",
+    "main.js.map": "/CRLabAdmin/static/js/main.2b9a72b8.chunk.js.map",
     "runtime~main.js": "/CRLabAdmin/static/js/runtime~main.3085aaee.js",
     "runtime~main.js.map": "/CRLabAdmin/static/js/runtime~main.3085aaee.js.map",
     "static/css/2.41a373cd.chunk.css": "/CRLabAdmin/static/css/2.41a373cd.chunk.css",
-    "static/js/2.ed3ac9ae.chunk.js": "/CRLabAdmin/static/js/2.ed3ac9ae.chunk.js",
-    "static/js/2.ed3ac9ae.chunk.js.map": "/CRLabAdmin/static/js/2.ed3ac9ae.chunk.js.map",
+    "static/js/2.13a843ff.chunk.js": "/CRLabAdmin/static/js/2.13a843ff.chunk.js",
+    "static/js/2.13a843ff.chunk.js.map": "/CRLabAdmin/static/js/2.13a843ff.chunk.js.map",
     "index.html": "/CRLabAdmin/index.html",
-    "precache-manifest.684b46702c2fa6c4a8425d937888dd75.js": "/CRLabAdmin/precache-manifest.684b46702c2fa6c4a8425d937888dd75.js",
+    "precache-manifest.4d7d2e96bc3fb599e7f210691ce3fca9.js": "/CRLabAdmin/precache-manifest.4d7d2e96bc3fb599e7f210691ce3fca9.js",
     "service-worker.js": "/CRLabAdmin/service-worker.js",
     "static/css/2.41a373cd.chunk.css.map": "/CRLabAdmin/static/css/2.41a373cd.chunk.css.map"
   }
