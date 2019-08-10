@@ -113,6 +113,18 @@ const MemberForm = ({ form, match, history }) => {
           {...form}
         />
       </InputItem>
+      <InputItem label="Term And Year">
+        <Field
+          dataKey={dataBindingKeys.termAndYear}
+          validationRules={[
+            {
+              required: true,
+              message: 'Please set the term and year of this course. e.g. 2019 Fall, Monday 3pm – 5:50pm'
+            }
+          ]}
+          {...form}
+        />
+      </InputItem>
       <InputItem label="Location">
         <Field
           dataKey={dataBindingKeys.location}
@@ -178,8 +190,20 @@ const MemberForm = ({ form, match, history }) => {
           dataKey={dataBindingKeys.officeHours}
           validationRules={[
             {
+              type: 'email',
+              message: "Input must be email."
+            }
+          ]}
+          {...form}
+        />
+      </InputItem>
+      <InputItem label="Email">
+        <Field
+          dataKey={dataBindingKeys.email}
+          validationRules={[
+            {
               required: true,
-              message: 'Please set the professor\'s office hours.'
+              message: 'Please set the credits of this course.'
             }
           ]}
           {...form}

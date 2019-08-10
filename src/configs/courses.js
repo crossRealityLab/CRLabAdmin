@@ -29,6 +29,16 @@ export const dataBindingConfs = [
   },
   {
     type: InputType.FIELD,
+    key: 'email',
+    defaultValue: ''
+  },
+  {
+    type: InputType.FIELD,
+    key: 'termAndYear',
+    defaultValue: ''
+  },
+  {
+    type: InputType.FIELD,
     key: 'location',
     defaultValue: '',
   },

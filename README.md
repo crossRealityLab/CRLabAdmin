@@ -85,6 +85,7 @@ type Course = {
     uuid: string;
     courseID: string;
     name: string;
+    termAndYear: string;
     credits: number;
     loaction: string; // e.g. YYYY/MM/DD
     tas: {
@@ -93,6 +94,7 @@ type Course = {
     }[],
     office: string;
     officeHours: string;
+    email: string;
     descriptions: string[];
     link: string; // to nctu course
     timestamp: number;
@@ -117,6 +119,7 @@ type Contact = {
 - [x] LabIntroduction
 - [x] Contact
 - [x] Member 加上 graduateYear
+- [x] Course 加上 termAndYear, email
 
 * Phase 1
 - [x] Support Search Bar in `List`
