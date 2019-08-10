@@ -32,7 +32,7 @@ export const uploadData = async (data, endpoint, uuid = '') => {
     if (uuid) {
       data.uuid = uuid;
       data.timestamp = Date.now();
-      await update(endpoint, uuid, data);
+      await update(endpoint, data, uuid);
     } else {
       data.uuid = uuidV4();
       data.createdTimestamp = Date.now();
@@ -40,6 +40,7 @@ export const uploadData = async (data, endpoint, uuid = '') => {
       await create(endpoint, data.uuid, data);
     }
   } catch (e) {
+    console.log('e:', e);
     throw e;
   }
 };
