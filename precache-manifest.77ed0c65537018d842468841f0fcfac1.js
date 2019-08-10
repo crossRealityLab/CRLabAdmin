@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3c53d034d3583be9c6e199e246dd321a",
+    "revision": "f5c935185c2cb015c9057ac574586710",
     "url": "/CRLabAdmin/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/CRLabAdmin/static/js/2.13a843ff.chunk.js"
   },
   {
-    "revision": "9e7310f30e47045f3193",
-    "url": "/CRLabAdmin/static/js/main.27b57e51.chunk.js"
+    "revision": "37c635f8c506521ba01d",
+    "url": "/CRLabAdmin/static/js/main.159376af.chunk.js"
   },
   {
     "revision": "c819d9d9243eca730bed",
