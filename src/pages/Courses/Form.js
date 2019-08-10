@@ -39,14 +39,14 @@ const MemberForm = ({ form, match, history }) => {
             await uploadData(preparedData, '/courses', match.params.uuid);
 
             notification.success({
-              message: `Create/Edit ${data.title} complete!`,
+              message: `Create/Edit ${data.name} complete!`,
               duration: 4
             });
 
             history.push(`/courses/list`);
           } catch (e) {
             notification.error({
-              message: `Upload ${data.title} error!`,
+              message: `Upload ${data.name} error!`,
               description: `${e}`,
               duration: 2
             });
@@ -188,12 +188,6 @@ const MemberForm = ({ form, match, history }) => {
       <InputItem label="Office hours">
         <Field
           dataKey={dataBindingKeys.officeHours}
-          validationRules={[
-            {
-              type: 'email',
-              message: "Input must be email."
-            }
-          ]}
           {...form}
         />
       </InputItem>
@@ -202,8 +196,8 @@ const MemberForm = ({ form, match, history }) => {
           dataKey={dataBindingKeys.email}
           validationRules={[
             {
-              required: true,
-              message: 'Please set the credits of this course.'
+              type: 'email',
+              message: "Input must be email."
             }
           ]}
           {...form}

@@ -40,14 +40,14 @@ const MemberForm = ({ form, match, history }) => {
             await uploadData(preparedData, '/members', match.params.uuid);
 
             notification.success({
-              message: `Create/Edit ${data.title} complete!`,
+              message: `Create/Edit ${data.fullName} Info. complete!`,
               duration: 4
             });
             history.push(`/members/list`);
           } catch (e) {
             console.error(e);
             notification.error({
-              message: `Create ${data.title} error!`,
+              message: `Create ${data.fullName} error!`,
               description: `${e}`,
               duration: 2
             });
