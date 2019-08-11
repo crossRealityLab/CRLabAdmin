@@ -204,7 +204,7 @@ const MemberForm = ({ form, match, history }) => {
         />
       </InputItem>
       <Form.Item label="Descriptions">
-        <DynamicInput dataKey={dataBindingKeys.descriptions} {...form} />
+        <DynamicInput dataKey={dataBindingKeys.descriptions} isTextArea {...form} />
       </Form.Item>
       <InputItem label="Information link">
         <Field

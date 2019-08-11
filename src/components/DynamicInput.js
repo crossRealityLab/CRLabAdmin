@@ -42,7 +42,8 @@ export default ({
   getFieldValue,
   setFieldsValue,
   validationRules = [],
-  isTextArea = false
+  isTextArea = false,
+  limitedFieldNums
 }) => {
   getFieldDecorator(`${dataKey}-idx`, { initialValue: [0] });
   const keys = getFieldValue(`${dataKey}-idx`);
@@ -79,11 +80,13 @@ export default ({
           {keys.length > 1 && <RemoveIcon onClick={remove(k)} />}
         </InputWrapper>
       ))}
-      <AddButtonWrapper>
-        <AddButton onClick={add}>
-          <Icon type="plus" /> Add field
-        </AddButton>
-      </AddButtonWrapper>
+      {!(limitedFieldNums && keys.length >= limitedFieldNums) && (
+        <AddButtonWrapper>
+          <AddButton onClick={add}>
+            <Icon type="plus" /> Add field
+          </AddButton>
+        </AddButtonWrapper>
+      )}
     </React.Fragment>
   );
 };

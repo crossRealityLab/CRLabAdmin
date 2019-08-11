@@ -18,7 +18,7 @@ export const prepareData = (data, dataBindingConfs = []) => {
         url: elem.file.url
       }));
     } else if (type === InputType.MULTI_FIELDS) {
-      result[key] = data[key].filter(elem => !!elem);
+      result[key] = data[key] ? data[key].filter(elem => !!elem) : [];
     } else {
       result[key] = data[key] ? data[key] : '';
     }

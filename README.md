@@ -115,7 +115,12 @@ type Contact = {
 
 ## TODO
 
+* FIX
+- [x] Courses: Use TextArea in description 
+- [x] Projects: no link will cause filter undefined error when editing
+
 * 補
+- [x] Lab Intro. limit visions length
 - [x] LabIntroduction
 - [x] Contact
 - [x] Member 加上 graduateYear

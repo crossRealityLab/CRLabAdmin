@@ -81,7 +81,11 @@ const LabIntoForm = ({ form }) => {
         <Field dataKey={dataBindingKeys.subTitle} {...form} />
       </InputItem>
       <Form.Item label="Visions">
-        <DynamicInput dataKey={dataBindingKeys.visions} {...form} />
+        <DynamicInput
+          dataKey={dataBindingKeys.visions}
+          limitedFieldNums={3}
+          {...form}
+        />
       </Form.Item>
       <ButtonWrapper>
         <Button type="primary" htmlType="submit">
