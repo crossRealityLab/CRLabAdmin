@@ -118,6 +118,7 @@ type Contact = {
 * FIX
 - [x] Courses: Use TextArea in description 
 - [x] Projects: no link will cause filter undefined error when editing
+- [ ] News: date validtion 
 
 * 補
 - [x] Lab Intro. limit visions length
