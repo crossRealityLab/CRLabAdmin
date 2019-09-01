@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Input, Button, Icon } from 'antd';
 
 const FloatSearchBar = React.forwardRef(
@@ -47,7 +47,7 @@ const FloatSearchBar = React.forwardRef(
 );
 
 export default dataIndex => {
-  const searchBarRef = useRef(null);
+  const searchBarRef = React.createRef(null);
   return {
     filterDropdown: props => (
       <FloatSearchBar ref={searchBarRef} dataIndex={dataIndex} {...props} />

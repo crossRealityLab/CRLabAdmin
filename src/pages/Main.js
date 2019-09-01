@@ -5,7 +5,8 @@ import { Layout, Menu, Icon, Button } from 'antd';
 
 import firebase from '../firebase';
 import Logo from '../components/Logo';
-import { pagesConfig } from '../configs/share';
+import { pages } from '../configs/main';
+import RouteEntry from './routeEntry';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -23,7 +24,7 @@ const StyledLayout = styled(Layout)`
 const StyledHeader = styled(Header)`
   background: #fff;
   padding: 0 20px;
-  text-align: end; 
+  text-align: end;
 `;
 
 const StyledContent = styled(Content)`
@@ -44,11 +45,11 @@ export default () => {
       <Sider breakpoint="lg" collapsedWidth="0">
         <Logo>Cross Reality Lab</Logo>
         <Menu theme="dark" mode="inline" selectedKeys={[]}>
-          {pagesConfig.map(({ name, path, iconType }) => (
-            <Menu.Item key={name}>
-              <Link to={path} activeClassName="active">
+          {pages.map(({ tabName, routePath, iconType }) => (
+            <Menu.Item key={tabName}>
+              <Link to={routePath} activeClassName="active">
                 <Icon type={iconType} />
-                <span>{name}</span>
+                <span>{tabName}</span>
               </Link>
             </Menu.Item>
           ))}
@@ -62,15 +63,23 @@ export default () => {
         </StyledHeader>
         <StyledContent>
           <Switch>
-            {pagesConfig.map(({ path, page }) => (
-              <Route key={path} path={path} component={page} />
+            {pages.map(({ tabName, routePath, endpoint, routes }) => (
+              <Route
+                key={tabName}
+                path={routePath}
+                render={() => (
+                  <RouteEntry
+                    routePath={routePath}
+                    endpoint={endpoint}
+                    routes={routes}
+                  />
+                )}
+              />
             ))}
             <Redirect to="/projects" />
           </Switch>
         </StyledContent>
-        <StyledFooter>
-          Cross Reality Lab Admin ©2019
-        </StyledFooter>
+        <StyledFooter>Cross Reality Lab Admin ©2019</StyledFooter>
       </Layout>
     </StyledLayout>
   );

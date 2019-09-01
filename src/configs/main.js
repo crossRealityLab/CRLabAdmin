@@ -41,7 +41,7 @@ const formFields = [
   },
   {
     inputType: InputType.FIELD,
-    label: 'Title',
+    label: 'Show title',
     defaultValue: '',
     inputProps: {
       dataKey: 'title',
