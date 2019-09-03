@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { Form, Button, notification } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
+import { Form as AForm, Button, notification } from 'antd';
 import styled from 'styled-components';
 
 import DynamicInput from '../components/DynamicInput';
@@ -28,7 +28,7 @@ const getInputWrapper = inputType => {
   if (inputType === InputType.FIELD) {
     return InputItem;
   }
-  return Form.Item;
+  return AForm.Item;
 };
 
 const getInputField = inputType => {
@@ -54,7 +54,7 @@ const getInputField = inputType => {
   }
 };
 
-const ProjectForm = ({
+const Form = ({
   form,
   match,
   history,
@@ -112,15 +112,15 @@ const ProjectForm = ({
   }
 
   return (
-    <Form
+    <AForm
       onSubmit={handleSubmit}
       labelCol={{ span: 3 }}
       wrapperCol={{ span: 12, offset: 1 }}
     >
       {withUUID && (
-        <Form.Item label="UUID">
+        <AForm.Item label="UUID">
           {data.uuid ? <strong>{data.uuid}</strong> : ''}
-        </Form.Item>
+        </AForm.Item>
       )}
       {formFields.map((field, idx) => {
         const Wrapper = getInputWrapper(field.inputType);
@@ -139,8 +139,8 @@ const ProjectForm = ({
           <Button type="danger">Back</Button>
         </Link>
       </ButtonWrapper>
-    </Form>
+    </AForm>
   );
 };
 
-export default Form.create()(ProjectForm);
+export default AForm.create()(withRouter(Form));

@@ -5,7 +5,7 @@ import { Layout, Menu, Icon, Button } from 'antd';
 
 import firebase from '../firebase';
 import Logo from '../components/Logo';
-import { pages } from '../configs/main';
+import { pagesConfig } from '../configs';
 import RouteEntry from './routeEntry';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -45,7 +45,7 @@ export default () => {
       <Sider breakpoint="lg" collapsedWidth="0">
         <Logo>Cross Reality Lab</Logo>
         <Menu theme="dark" mode="inline" selectedKeys={[]}>
-          {pages.map(({ tabName, routePath, iconType }) => (
+          {pagesConfig.map(({ tabName, routePath, iconType }) => (
             <Menu.Item key={tabName}>
               <Link to={routePath} activeClassName="active">
                 <Icon type={iconType} />
@@ -63,7 +63,7 @@ export default () => {
         </StyledHeader>
         <StyledContent>
           <Switch>
-            {pages.map(({ tabName, routePath, endpoint, routes }) => (
+            {pagesConfig.map(({ tabName, routePath, endpoint, routes }) => (
               <Route
                 key={tabName}
                 path={routePath}

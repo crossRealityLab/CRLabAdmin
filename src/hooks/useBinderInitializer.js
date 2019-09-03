@@ -2,10 +2,10 @@ import { useEffect, useCallback } from 'react';
 
 import { InputType } from '../constants';
 
-export default ({ data, dataBindingConfs, getFieldDecorator, setFieldsValue }) => {
+export default ({ data, formFields, getFieldDecorator, setFieldsValue }) => {
 
   const createDataBinder = useCallback(() => {
-    dataBindingConfs.forEach(({ inputType, inputProps: { dataKey: key } }) => {
+    formFields.forEach(({ inputType, inputProps: { dataKey: key } }) => {
       if (inputType === InputType.MULTI_FIELDS) {
         // Create ''only'' local key binder first when it's dynamic input, otherwise it will crash .
         getFieldDecorator(`${key}-idx`);
@@ -13,14 +13,14 @@ export default ({ data, dataBindingConfs, getFieldDecorator, setFieldsValue }) =
         getFieldDecorator(key);
       }
     });
-  }, [dataBindingConfs, getFieldDecorator]);
+  }, [formFields, getFieldDecorator]);
 
   const setInitFormValue = useCallback(
     data => {
       const setPair = {};
       const delaySetPair = {}; // dynamic input data need to set ''after'' its component created.
 
-      dataBindingConfs.forEach(({ inputProps: { dataKey: key }, inputType, defaultValue, defaultKeys }) => {
+      formFields.forEach(({ inputProps: { dataKey: key }, inputType, defaultValue, defaultKeys }) => {
         if (inputType === InputType.IMGS_WITH_CAPTION) {
           const value = data[key]
             ? data[key].map((imgInfo, idx) => ({
@@ -64,7 +64,7 @@ export default ({ data, dataBindingConfs, getFieldDecorator, setFieldsValue }) =
       setFieldsValue(setPair);
       setTimeout(() => setFieldsValue(delaySetPair), 0);
     },
-    [dataBindingConfs, setFieldsValue]
+    [formFields, setFieldsValue]
   );
 
   useEffect(() => {

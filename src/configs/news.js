@@ -47,7 +47,7 @@ const formFields = [
   },
 ];
 
-export const newsPageConfig = {
+export default {
   tabName: 'News',
   routePath: '/news',
   endpoint: '/news',

@@ -215,7 +215,7 @@ const formFields = [
   }
 ];
 
-export const projectPageConfig = {
+export default {
   tabName: 'Projects',
   routePath: '/projects',
   endpoint: '/projects',
