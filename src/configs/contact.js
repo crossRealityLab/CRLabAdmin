@@ -1,56 +1,108 @@
+import Form from '../pages/Form';
 import { InputType } from '../constants';
-import Contact from '../pages/Contact';
 
-export const basic = {
-  name: 'Contact',
-  path: '/contact',
-  iconType: 'contacts',
-  page: Contact,
-};
-
-/**
- * In order to work with antd Form data binding
- */
-
-export const dataBindingConfs = [
+const formFields = [
   {
-    type: InputType.FIELD,
-    key: 'name',
-    defaultValue: ''
-  },
-  {
-    type: InputType.FIELD,
-    key: 'email',
+    inputType: InputType.FIELD,
+    label: 'Name',
     defaultValue: '',
+    inputProps: {
+      dataKey: 'name',
+      validationRules: [
+        {
+          required: true,
+          message: 'Please set the name.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'office',
-    defaultValue: ''
+    inputType: InputType.FIELD,
+    label: 'Email',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'email',
+      validationRules: [
+        {
+          type: 'email',
+          message: 'The input must be an email.'
+        },
+        {
+          required: true,
+          message: 'Please set the email.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'officeHours',
-    defaultValue: ''
+    inputType: InputType.FIELD,
+    label: 'Office',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'office',
+      validationRules: [
+        {
+          required: true,
+          message: 'Please set the office.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'lab',
-    defaultValue: ''
+    inputType: InputType.FIELD,
+    label: 'Office hours',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'officeHours'
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'description',
-    defaultValue: ''
+    inputType: InputType.FIELD,
+    label: 'Lab',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'lab',
+      validationRules: [
+        {
+          required: true,
+          message: 'Please set the lab location.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.IMG,
-    key: 'banner',
+    inputType: InputType.TEXTAREA,
+    label: 'Description',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'description'
+    }
+  },
+  {
+    inputType: InputType.IMG,
+    label: 'banner',
     defaultValue: [],
-  },
+    inputProps: {
+      dataKey: 'banner',
+      isSingleImg: true,
+      endpoint: '/contact'
+    }
+  }
 ];
 
-export const dataBindingKeys = dataBindingConfs.reduce(
-  (acc, current) => ({ ...acc, [current.key]: current.key }),
-  {}
-);
+export default {
+  tabName: 'Contact',
+  routePath: '/contact',
+  endpoint: '/contact',
+  iconType: 'contacts',
+  routes: [
+    {
+      path: '/',
+      routeOptions: {},
+      component: Form,
+      props: {
+        formFields,
+      }
+    }
+  ]
+};

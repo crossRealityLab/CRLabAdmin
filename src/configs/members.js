@@ -1,73 +1,259 @@
+import moment from 'moment';
+
+import Form from '../pages/Form';
+import List from '../pages/List';
 import { InputType } from '../constants';
-import Members from '../pages/Members';
+import getFiltersFuncProps from '../utils/getFiltersFuncProps';
 
-export const basic = {
-  name: 'Members',
-  path: '/members',
-  iconType: 'user',
-  page: Members,
-};
+const renderLastEditTime = timestamp =>
+  moment(timestamp)
+    .local()
+    .format('YYYY/MM/DD HH:mm:ss');
 
-/**
- * In order to work with antd Form data binding
- */
-export const dataBindingConfs = [
+const formFields = [
   {
-    type: InputType.FIELD,
-    key: 'fullName',
-    defaultValue: ''
-  },
-  {
-    type: InputType.FIELD,
-    key: 'title',
-    defaultValue: ''
-  },
-  {
-    type: InputType.FIELD,
-    key: 'email',
+    inputType: InputType.FIELD,
+    label: 'Full name',
     defaultValue: '',
+    inputProps: {
+      dataKey: 'fullName',
+      validationRules: [
+        {
+          required: true,
+          message: 'Please set the full name of this memeber.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.MULTI_FIELDS,
-    key: 'focusOn',
+    inputType: InputType.IMG,
+    label: 'Avatar',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'avatar',
+      isSingleImg: true,
+      endpoint: "/members",
+    }
+  },
+  {
+    inputType: InputType.FIELD,
+    label: 'Title',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'title',
+      validationRules: [
+        {
+          required: true,
+          message:
+            'Please set the title of this member(e.g. professor, PhD, Master).'
+        }
+      ]
+    }
+  },
+  {
+    inputType: InputType.FIELD,
+    label: 'Email',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'email',
+      validationRules: [
+        {
+          type: 'email',
+          message: 'The input must be an email.'
+        },
+        {
+          required: true,
+          message: 'Please set the email of this member.'
+        }
+      ]
+    }
+  },
+  {
+    inputType: InputType.MULTI_FIELDS,
+    label: 'Focus on',
     defaultValue: [],
     defaultKeys: [],
+    inputProps: {
+      dataKey: 'focusOn',
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'website',
-    defaultValue: ''
-  },
-  {
-    type: InputType.IMG,
-    key: 'avatar',
-    defaultValue: [],
-  },
-  {
-    type: InputType.FIELD,
-    key: 'about',
+    inputType: InputType.FIELD,
+    label: 'Personal website',
     defaultValue: '',
+    inputProps: {
+      dataKey: 'website',
+      validationRules: [
+        {
+          type: 'url',
+          message: 'The input must be an url.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.FIELD,
-    key: 'graduateYear',
+    inputType: InputType.TEXTAREA,
+    label: 'About',
     defaultValue: '',
+    inputProps: {
+      dataKey: 'about',
+      isTextArea: true,
+    }
   },
   {
-    type: InputType.MULTI_FIELDS,
-    key: 'publications',
+    inputType: InputType.FIELD,
+    label: 'Graduate year',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'graduateYear',
+      validationRules: [
+        {
+          validator: (rule, value) => !isNaN(value),
+          message:
+            'Input must be a number'
+        }
+      ]
+    }
+  },
+  {
+    inputType: InputType.MULTI_FIELDS_OF_FIELDS,
+    label: 'Publications',
     defaultValue: [],
     defaultKeys: [],
+    inputProps: {
+      dataKey: 'publications',
+      fields: [
+        {
+          key: 'title',
+          inputParams: {
+            placeholder: 'title'
+          },
+          validationRules: [
+            {
+              required: true,
+              message: "Publication's title is required."
+            }
+          ]
+        },
+        {
+          key: 'conference',
+          inputParams: {
+            placeholder: 'conference'
+          }
+        },
+        {
+          key: 'year',
+          inputParams: {
+            placeholder: 'year'
+          },
+          validationRules: [
+            {
+              validator: (rule, value) => !isNaN(value),
+              message: 'Input must be a number.'
+            }
+          ]
+        },
+        {
+          key: 'link',
+          inputParams: {
+            placeholder: 'link'
+          },
+          validationRules: [
+            {
+              type: 'url',
+              message: 'Input must be an url.'
+            }
+          ]
+        }
+      ]
+    }
   },
   {
-    type: InputType.MULTI_FIELDS,
-    key: 'awards',
+    inputType: InputType.MULTI_FIELDS_OF_FIELDS,
+    label: 'Awards',
     defaultValue: [],
     defaultKeys: [],
+    inputProps: {
+      dataKey: 'awards',
+      fields: [
+        {
+          key: 'title',
+          inputParams: {
+            placeholder: 'title'
+          }
+        },
+        {
+          key: 'year',
+          inputParams: {
+            placeholder: 'year'
+          }
+        }
+      ]
+    }
   },
 ];
 
-export const dataBindingKeys = dataBindingConfs.reduce(
-  (acc, current) => ({ ...acc, [current.key]: current.key }),
-  {}
-);
+export default {
+  tabName: 'Members',
+  routePath: '/members',
+  endpoint: '/members',
+  iconType: 'user',
+
+  routes: [
+    {
+      path: '/list',
+      routeOptions: {
+        exact: true
+      },
+      component: List,
+      props: {
+        listColumns: [
+          {
+            title: 'Name',
+            dataIndex: 'fullName',
+            key: 'fullName',
+            options: { ...getFiltersFuncProps('fullName') }
+          },
+          {
+            title: 'Title',
+            dataIndex: 'title',
+            key: 'title',
+            options: { ...getFiltersFuncProps('title') }
+          },
+          {
+            title: 'Last edit',
+            dataIndex: 'timestamp',
+            key: 'timestamp',
+            options: {
+              render: renderLastEditTime
+            }
+          }
+        ],
+        withActionColumn: true
+      }
+    },
+    {
+      path: '/:uuid/edit',
+      routeOptions: {},
+      component: Form,
+      props: {
+        formFields,
+        withUUID: true
+      }
+    },
+    {
+      path: '/create',
+      routeOptions: {},
+      component: Form,
+      props: {
+        formFields
+      }
+    }
+  ]
+};
+
+
+
+
+
+

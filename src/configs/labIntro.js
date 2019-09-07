@@ -1,37 +1,54 @@
+import Form from '../pages/Form';
 import { InputType } from '../constants';
-import LabIntro from '../pages/LabIntro';
 
-export const basic = {
-  name: 'Lab Introduction',
-  path: '/labIntro',
-  iconType: 'crown',
-  page: LabIntro,
-};
-
-/**
- * In order to work with antd Form data binding
- */
-
-export const dataBindingConfs = [
+const formFields = [
   {
-    type: InputType.FIELD,
-    key: 'title',
-    defaultValue: ''
-  },
-  {
-    type: InputType.FIELD,
-    key: 'subTitle',
+    inputType: InputType.FIELD,
+    label: 'Title',
     defaultValue: '',
+    inputProps: {
+      dataKey: 'title',
+      validationRules: [
+        {
+          required: true,
+          message: 'Please set the title.'
+        }
+      ]
+    }
   },
   {
-    type: InputType.MULTI_FIELDS,
-    key: 'visions',
+    inputType: InputType.FIELD,
+    label: 'SubTitle',
+    defaultValue: '',
+    inputProps: {
+      dataKey: 'subTitle',
+    }
+  },
+  {
+    inputType: InputType.MULTI_FIELDS,
+    label: 'Visions',
     defaultValue: [],
     defaultKeys: [],
+    inputProps: {
+      dataKey: 'visions',
+      limitedFieldNums: 3,
+    }
   },
 ];
 
-export const dataBindingKeys = dataBindingConfs.reduce(
-  (acc, current) => ({ ...acc, [current.key]: current.key }),
-  {}
-);
+export default {
+  tabName: 'Lab Introduction',
+  routePath: '/labIntro',
+  endpoint: '/labIntro',
+  iconType: 'crown',
+  routes: [
+    {
+      path: '/',
+      routeOptions: {},
+      component: Form,
+      props: {
+        formFields,
+      }
+    }
+  ]
+};

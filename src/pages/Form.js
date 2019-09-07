@@ -13,7 +13,11 @@ import useFormData from '../hooks/useFormData';
 import useBinderInitializer from '../hooks/useBinderInitializer';
 
 import { InputType } from '../constants';
-import { prepareData, uploadData } from '../utils/uploadDataHelpers';
+import {
+  prepareData,
+  uploadData,
+  uploadPlainData
+} from '../utils/uploadDataHelpers';
 
 const ButtonWrapper = styled.div`
   display: flex;
@@ -58,16 +62,17 @@ const Form = ({
   form,
   match,
   history,
-  formFields, 
+  formFields,
   withUUID,
   routePath,
   endpoint
 }) => {
   const { validateFields } = form;
-  const { data = {}, isLoading = true } = useFormData(
-    endpoint,
-    match.params.uuid
-  );
+  // work-around .
+  const onlyFormPage =
+    match.path.includes('contact') || match.path.includes('labIntro');
+  const fetchParams = onlyFormPage ? [endpoint] : [endpoint, match.params.uuid];
+  const { data = {}, isLoading = true } = useFormData(...fetchParams);
   useBinderInitializer({ ...form, data, formFields });
 
   const handleSubmit = useCallback(
@@ -77,7 +82,8 @@ const Form = ({
         if (!err) {
           try {
             const preparedData = prepareData(data, formFields);
-            await uploadData(preparedData, endpoint, match.params.uuid);
+            const uploadAPI = onlyFormPage ? uploadPlainData : uploadData;
+            await uploadAPI(preparedData, endpoint, match.params.uuid);
 
             notification.success({
               message: `Create/Edit ${data.title} complete!`,
