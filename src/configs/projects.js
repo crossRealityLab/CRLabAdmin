@@ -99,7 +99,7 @@ const formFields = [
     }
   },
   {
-    inputType: InputType.IMG,
+    inputType: InputType.IMGS_WITH_CAPTION,
     label: 'Images',
     defaultValue: [],
     inputProps: {
@@ -160,7 +160,7 @@ const formFields = [
     defaultValue: [],
     defaultKeys: [],
     inputProps: {
-      dataKey: 'descriptions'
+      dataKey: 'tags'
     }
   },
   {

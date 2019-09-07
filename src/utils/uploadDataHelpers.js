@@ -5,22 +5,22 @@ import { create, update } from '../apis/firebaseApis';
 
 export const prepareData = (data, dataBindingConfs = []) => {
   const result = {};
-  dataBindingConfs.forEach(({ type, key }) => {
-    if (type === InputType.IMGS_WITH_CAPTION) {
-      result[key] = data[key].map(elem => ({
+  dataBindingConfs.forEach(({ inputType, inputProps: { dataKey } }) => {
+    if (inputType === InputType.IMGS_WITH_CAPTION) {
+      result[dataKey] = data[dataKey].map(elem => ({
         name: elem.file.name,
         url: elem.file.url,
         caption: elem.caption
       }));
-    } else if (type === InputType.IMG) {
-      result[key] = data[key].map(elem => ({
+    } else if (inputType === InputType.IMG) {
+      result[dataKey] = data[dataKey].map(elem => ({
         name: elem.file.name,
         url: elem.file.url
       }));
-    } else if (type === InputType.MULTI_FIELDS) {
-      result[key] = data[key] ? data[key].filter(elem => !!elem) : [];
+    } else if (inputType === InputType.MULTI_FIELDS) {
+      result[dataKey] = data[dataKey] ? data[dataKey].filter(elem => !!elem) : [];
     } else {
-      result[key] = data[key] ? data[key] : '';
+      result[dataKey] = data[dataKey] ? data[dataKey] : '';
     }
   });
 
