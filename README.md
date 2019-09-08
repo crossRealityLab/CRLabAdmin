@@ -1,7 +1,125 @@
 # Cross Reality Lab Admin
 
-## Data Spec .
+## Section
 
+### Current sections
+* Projects
+* Courses
+* Members
+* News
+* Contact
+* Lab Introduction
+
+### Add new section
+
+Set up config files in src/configs/ with: 
+
+``` typescript
+type Config = {
+  tabName: string; 
+  routePath: string;  // section root path
+  endpoint: string; // api endpoint in firebase
+  iconType: string;   // icon name string in antd
+  routes: SubRouteConfig[]; // sub pages route config under root path
+};
+
+type SubRouteConfig = {
+  path: string;
+  routeOptions : object;  // react router's <Route>'s props
+  component: React.ComponentType; // usage component in this route, e.g. Form, List 
+  props: object;  // props which will inject to usage component
+};
+```
+
+export it from src/configs/index.js
+
+``` js
+...
+import [new section config] from './[new section config path]';
+
+export default {
+  ...,
+  [new seciion config],
+};
+```
+
+## Input Component
+
+### Types
+
+Set in src/contants.js
+
+* Current types
+
+``` js
+IMG: Symbol('img'), // e.g. cover, avatar
+IMGS_WITH_CAPTION: Symbol('imgs-with-caption'),
+FIELD: Symbol('field'),
+TEXTAREA: Symbol('textarea'),
+MULTI_FIELDS: Symbol('multi-fields'), // e.g. tags
+MULTI_FIELDS_OF_FIELDS: Symbol('multi-fields-of-fields'), // e.g. publication, awards
+```
+
+### Current Components
+* Input
+  - Field
+    - type: FIELD
+  - TextArea
+    - type: TEXTAREA
+  - Both params
+    ``` typescript
+    type Params = {
+      dataKey: string;  // binding key for antd
+      validationRules: array;  // antd's validationRules
+      inputProps: object; // will inject to antd component
+    }
+    ```
+  
+* DynamicInput
+  - Generate multiple input fields in one label
+  - type: MULTI_FIELDS
+  - params
+    ``` typescript
+    type Params = {
+      dataKey: string;  // binding key for antd
+      validationRules: array;  // antd's validationRules
+      isTextArea: boolean; 
+      limitedFieldNums: number;
+    }
+    ```
+* DynamicMultiInput
+  - Generate multiple input field of fields in one label
+  - type: MULTI_FIELDS_OF_FIELDS
+  - params
+    ``` typescript
+    type Params = {
+      dataKey: string;  // binding key for antd
+      fields: {
+          key: string;  // binding key for internel field
+          inputParams: object;  // props inject to input component, e.g. placeholder: '...';
+          validationRules: // antd's validationRules
+      }[];
+    }
+    ```
+  
+* ImgUploader
+  - Image input
+  - Single image
+    - type: IMG
+  - Mutile images with caption
+    - type: IMGS_WITH_CAPTION
+  - params
+    ``` typescript
+    type Params = {
+      dataKey: string;  // binding key for antd
+      endpoint: string; // image upload's endpoint, e.g. /projects
+      isSingleImg: boolean; // must set to false if type is IMGS_WITH_CAPTION
+      withCaption: boolean; // must set to true if type is IMGS_WITH_CAPTION
+    }
+    ```
+
+
+## Data Spec .
 ```typescript
 type Project = {
   [uuid: string]: {
@@ -113,41 +231,10 @@ type Contact = {
 };
 ```
 
-## TODO
+## Before develop
+* ADD env.js in src/
 
-* FIX
-- [x] Courses: Use TextArea in description 
-- [x] Projects: no link will cause filter undefined error when editing
-- [ ] News: date validtion 
-
-* 補
-- [x] Lab Intro. limit visions length
-- [x] LabIntroduction
-- [x] Contact
-- [x] Member 加上 graduateYear
-- [x] Course 加上 termAndYear, email
-
-* Phase 1
-- [x] Support Search Bar in `List`
-- [x] Support Validation in `DynamicMultiInput`
-- News
-  - [x] Using Date picker or support regx validation
-  - [x] Support sorted on `List`
-- [x] Auth 
-- [x] Modulelize 各個不同類型 Input
-  - Keep in components file
-- [x] Img, Video with caption
-- [x] Validation
-- [x] 串接資料
-  - 在 root (Edit.js/Create.js) 撰寫邏輯
-    - check 是否帶有 id
-      - 有: Edit -> 會有 initial data state .
-      - 無: Create
-
-* Phase 2 
-- [x] Refactor `setInitFormValue` func.
-  - Without using key to decide what to do
-- [x] Refactor `prepareUploadedData` func.
-  - Without using key to decide what to do
-- [x] Refactor `DynamicMultiInput` & `DynamicInput`
-- [x] Configlize `Main` 
+``` bash
+$ yarn
+$ yarn start
+```
